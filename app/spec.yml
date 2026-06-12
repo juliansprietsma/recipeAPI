@@ -1,0 +1,25 @@
+openapi: 3.0.4
+
+info:
+  title: sample
+  description: test
+  version: 0.0.1
+
+servers:
+  - url: localhost:8000
+    description: testing
+
+paths:
+  /users:
+    get:
+      summary: returns list of users
+      description: test
+      responses:
+        "200":
+          description: test
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
