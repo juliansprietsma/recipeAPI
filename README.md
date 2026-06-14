@@ -45,3 +45,10 @@ Run the application using docker
 ```bash
 docker compose up --build
 ```
+
+**important**, if you change the models in any way, make sure to fully restore the docker containers (which also cleans out and resets the database)
+
+```bash
+docker compose down -v
+docker compose up --build
+```
