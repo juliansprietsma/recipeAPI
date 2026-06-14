@@ -27,14 +27,21 @@ Clone the repository
 git clone git@github.com:juliansprietsma/recipeAPI.git
 ```
 
-Use uv to create an environment
+Use uv to create an environment and activate it
 
 ```bash
 uv venv
+source .venv/bin/activate
 ```
 
 sync packages
 
 ```bash
 uv sync
+```
+
+Run the application using docker
+
+```bash
+docker compose up --build
 ```
