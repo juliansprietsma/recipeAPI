@@ -24,6 +24,7 @@ class Recipe(RecipeBase):
         from_attributes = True
 
 class RecipeCreate(RecipeBase):
+    name: str
     cookTime: datetime.timedelta
     prepTime: datetime.timedelta
     steps: str
