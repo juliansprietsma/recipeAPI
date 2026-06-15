@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, Interval, Text
 class Recipe(Base):
     __tablename__ = "recipes"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True, nullable=False)
     name = Column(String, nullable=False)
     cookTime = Column(Interval, nullable=False)
     prepTime = Column(Interval, nullable=True)
