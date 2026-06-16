@@ -2,7 +2,7 @@ from app.database import Base, engine
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy.orm import relationship
 
-from app.models.ingredients_recipes import ingredients_recipes_table
+from .ingredients_recipes import ingredients_recipes_table
 
 class Ingredient(Base):
     __tablename__ = "ingredients"
@@ -13,5 +13,5 @@ class Ingredient(Base):
     unit = Column("Unit", String, nullable=True)
 
     recipes = relationship(
-        "Recipes", secondary=ingredients_recipes_table, back_populates="ingredients"
+        "Recipe", secondary=ingredients_recipes_table, back_populates="ingredients"
     )

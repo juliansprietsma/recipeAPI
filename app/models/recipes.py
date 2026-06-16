@@ -2,7 +2,7 @@ from app.database import Base, engine
 from sqlalchemy import Column, Integer, String, Interval, Text
 from sqlalchemy.orm import relationship
 
-from app.models.ingredients_recipes import ingredients_recipes_table
+from .ingredients_recipes import ingredients_recipes_table
 
 class Recipe(Base):
     __tablename__ = "recipes"
@@ -12,6 +12,7 @@ class Recipe(Base):
     cookTime = Column("Cooking_time", Interval, nullable=False)
     prepTime = Column("Preparation_time", Interval, nullable=True)
     steps = Column("Steps", Text, nullable=True)
+
     ingredients = relationship(
-        "Ingredients", secondary=ingredients_recipes_table, back_populates="recipes"
+        "Ingredient", secondary=ingredients_recipes_table, back_populates="recipes"
     )
