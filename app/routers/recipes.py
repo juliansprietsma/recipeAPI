@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import recipes as recipeModels
 from ..schemas.recipes import RecipeSummary, RecipeCreate, Recipe
+from ..crud.recipe import RecipeController
+from ..crud import ObjectNotFoundException, MultipleInstancesFoundException
 
 router = APIRouter(
     prefix="/recipes",
@@ -13,12 +15,10 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[RecipeSummary])
-async def get_recipes(db: Session = Depends(get_db)):
-    """
-        Gets a list of recipes
-    """
-
-    recipes = db.query(recipeModels.Recipe).all()
+async def get_recipes(
+    controller: RecipeController = Depends(RecipeController)
+):
+    recipes = controller.get_recipes()
 
     serialized_recipes = []
     for recipe in recipes:
@@ -29,22 +29,35 @@ async def get_recipes(db: Session = Depends(get_db)):
 
 
 @router.get("/{id}", response_model=Recipe, status_code=status.HTTP_200_OK)
-async def get_recipe(id: int, db: Session = Depends(get_db)):
-    recipe = db.query(recipeModels.Recipe).filter(recipeModels.Recipe.id == id).first()
+async def get_recipe(id: int, controller: RecipeController = Depends(RecipeController)):
 
-    if recipe is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Id: {id} does not exist")
-    
-    return recipe
+    try:
+        recipe = controller.get_recipe(id)
+
+        return Recipe(
+            id = recipe.id,
+            name = recipe.name,
+            cookTime = recipe.cookTime,
+            prepTime = recipe.prepTime,
+            steps = recipe.steps,
+            ingredients = recipe.ingredients
+        )
+    except ObjectNotFoundException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Recipe with this ID has not been found"
+        )
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=List[RecipeCreate])
-async def create_recipe(recipe: RecipeCreate, db: Session = Depends(get_db)):
-    new_recipe = recipeModels.Recipe(**recipe.__dict__)
-    db.add(new_recipe)
-    db.commit()
-    db.refresh(new_recipe)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=int)
+async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Depends(RecipeController)):
 
-    return [new_recipe]
-
-
+    try:
+        recipe = controller.create_recipe(recipe)
+        return recipe.id
+    except ObjectNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except MultipleInstancesFoundException as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

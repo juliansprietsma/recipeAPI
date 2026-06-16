@@ -1,33 +1,25 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
 from app.database import get_db
-from ..schemas.ingredients import IngredientSummary, IngredientCreate
-from app.models import ingredients as ingredientModels
+from ..schemas.ingredients import Ingredient, IngredientSummary, IngredientCreate
+from ..models import ingredients as ingredientModels
+from ..crud.ingredient import IngredientController
+from ..crud import ObjectNotFoundException
 
 router = APIRouter(
     prefix="/ingredients",
     tags=["Ingredients"]
 )
 
-@router.get("/", response_model=List[IngredientSummary])
-async def get_ingredients(db: Session = Depends(get_db)):
-
-    ingredients = db.query(ingredientModels.Ingredient).all()
-
-    serialized_ingredients = []
-    for ingredient in ingredients:
-        serialized_ingredient = IngredientSummary(**ingredient.__dict__)
-        serialized_ingredients.append(serialized_ingredient)
+@router.get("/{id}", response_model=Ingredient)
+async def get_ingredient(id: int, controller: IngredientController = Depends(IngredientController)):
+    try:
+        ingredient = controller.get_ingredient(id)
+    except ObjectNotFoundException:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ingredient with this id ({id}) does not exist")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     
-    return ingredients
-
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=List[IngredientCreate])
-async def create_ingredient(ingredient: IngredientCreate, db: Session = Depends(get_db)):
-    new_ingredient = ingredientModels.Ingredient(**ingredient.__dict__)
-    db.add(new_ingredient)
-    db.commit()
-    db.refresh(new_ingredient)
-
-    return [new_ingredient]
+    return ingredient
