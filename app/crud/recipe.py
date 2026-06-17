@@ -36,7 +36,7 @@ class RecipeController(Controller):
             raise AlreadyExistsException("A recipe with this name already exists")
         
         db_ingredients = []
-        for ingredient in Recipe.ingredients:
+        for ingredient in recipe.ingredients:
             db_ingredient = self.ingredients_controller.create_or_retrieve_ingredient(
                 ingredient_name=ingredient.name,
                 ingredient_amount=ingredient.amount,

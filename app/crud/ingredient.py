@@ -14,20 +14,14 @@ class IngredientController(Controller):
     
     def get_ingredient_by_properties(self, ingredient_name: str, ingredient_amount: float, ingredient_unit: str):
         
-        ingredients: Query = self.db.query(Ingredient)
-
-        if ingredient_name:
-            ingredients.filter(Ingredient.name == ingredient_name)
-        if ingredient_amount:
-            ingredients.filter(Ingredient.amount == ingredient_amount)
-        if ingredient_unit:
-            ingredients.filter(Ingredient.unit == ingredient_unit)
+        ingredients: Query = self.db.query(Ingredient).filter(Ingredient.name == ingredient_name,
+                                                              Ingredient.amount == ingredient_amount,
+                                                              Ingredient.unit == ingredient_unit)
 
         if ingredients.count() < 1:
             raise ObjectNotFoundException("The ingredient with the given ID does not exist")
         elif ingredients.count() > 1:
-            print(ingredients.all())
-            raise MultipleInstancesFoundException(f"Multiple ingredients with name {ingredient_name} found")
+            raise MultipleInstancesFoundException(f"Multiple ingredients with the same properties found")
         
         return ingredients.first()
     
