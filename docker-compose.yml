@@ -1,11 +1,10 @@
 services:
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
-    working_dir: /app
+      context: ./backend
+    working_dir: /backend
     volumes:
-      - ./app:/app/app
+      - ./backend:/backend/backend
 
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}

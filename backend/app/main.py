@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.routers import recipes, ingredients
+from app.routers import ingredients
+from app.routers import recipes
 
 from app.models.recipes import Base as recipesBase
 from app.models.recipes import engine as recipesEngine

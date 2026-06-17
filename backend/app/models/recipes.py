@@ -1,4 +1,4 @@
-from app.database import Base, engine
+from backend.app.database import Base, engine
 from sqlalchemy import Column, Integer, String, Interval, Text
 from sqlalchemy.orm import relationship
 
