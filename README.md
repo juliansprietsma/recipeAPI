@@ -2,8 +2,8 @@
 This API is designed to contain recipes that can be filtered on eg. ingredients and cooking time. It contains a [FastAPI](https://fastapi.tiangolo.com/) backend and a
 frontend that is yet to be implemented. For more information on these, see the links below:
 
-    - [Backend](backend/README.md)
-    - Frontend (to be implemented)
+- [Backend](backend/README.md)
+- Frontend (to be implemented)
 
 
 
