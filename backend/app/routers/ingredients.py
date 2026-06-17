@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
-from backend.app.database import get_db
+from app.database import get_db
 from ..schemas.ingredients import Ingredient, IngredientSummary, IngredientCreate
 from ..models import ingredients as ingredientModels
 from ..crud.ingredient import IngredientController

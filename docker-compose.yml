@@ -1,5 +1,5 @@
 services:
-  app:
+  backend:
     build:
       context: ./backend
     working_dir: /backend
@@ -10,11 +10,21 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     
     ports:
-      - "${APP_PORT}:8000"
+      - "${BACKEND_PORT}:8000"
 
     depends_on:
       - postgres
 
+  frontend:
+    build:
+      context: ./frontend
+
+    ports:
+      - "${FRONTEND_PORT}:80"
+
+    environment:
+      - http://localhost:${BACKEND_PORT}
+  
   postgres:
     image: postgres:latest
 
