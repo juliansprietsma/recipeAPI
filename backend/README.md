@@ -13,3 +13,7 @@ This project contains a [FastAPI](https://fastapi.tiangolo.com/) backend. The fo
         - pyproject.toml
         - README.md
         - uv.lock
+
+To see the OpenAPI documentation, start the application using docker and then go to:
+> localhost:{BACKEND_PORT}/docs
+Where {BACKEND_PORT} is the port you set in the .env file
