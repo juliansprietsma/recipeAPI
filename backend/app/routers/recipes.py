@@ -16,9 +16,12 @@ router = APIRouter(
 
 @router.get("/", response_model=List[RecipeSummary])
 async def get_recipes(
+    name: str = None,
+    cookTime: str = None,
+    ingredients: List[str] = [],
     controller: RecipeController = Depends(RecipeController)
 ):
-    recipes = controller.get_recipes()
+    recipes = controller.get_recipes(name, cookTime, ingredients)
 
     serialized_recipes = []
     for recipe in recipes:
