@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.models import recipes as recipeModels
+from ..database import get_db
+from ..models import recipes as recipeModels
 from ..schemas.recipes import RecipeSummary, RecipeCreate, Recipe
 from ..crud.recipe import RecipeController
 from ..crud import ObjectNotFoundException, MultipleInstancesFoundException
