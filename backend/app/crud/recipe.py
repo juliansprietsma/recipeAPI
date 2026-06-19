@@ -10,6 +10,7 @@ from ..models.ingredients import Ingredient
 from ..schemas.recipes import RecipeCreate
 from .controller import Controller
 from .ingredient import IngredientController
+from .step import StepController
 from . import ObjectNotFoundException, AlreadyExistsException
 
 
@@ -18,6 +19,7 @@ class RecipeController(Controller):
         super().__init__(db)
 
         self.ingredients_controller = IngredientController(db)
+        self.step_controller = StepController(db)
 
     def get_recipes(self, 
                     name: str, 
@@ -66,11 +68,20 @@ class RecipeController(Controller):
             )
             db_ingredients.append(db_ingredient)
 
+        db_steps = []
+        for step in recipe.steps:
+            db_step = self.step_controller.create_step(
+                stepNr=step.stepNr,
+                step=step.step
+            )
+            db_steps.append(db_step)
+
         db_recipe = Recipe(
             name=recipe.name,
             cookTime=recipe.cookTime,
             prepTime=recipe.prepTime,
-            steps=recipe.steps,
+            steps=db_steps,
+            url=recipe.url,
             ingredients=db_ingredients
         )
 

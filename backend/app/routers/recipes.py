@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session, Query
 from ..database import get_db
 from ..models import recipes as recipeModels
 from ..schemas.recipes import RecipeSummary, RecipeCreate, Recipe
+from ..schemas.steps import StepSummary
 from ..crud.recipe import RecipeController
+from ..crud.step import StepController
 from ..crud import ObjectNotFoundException, MultipleInstancesFoundException
 
 router = APIRouter(
@@ -44,6 +46,7 @@ async def get_recipe(id: int, controller: RecipeController = Depends(RecipeContr
             cookTime = recipe.cookTime,
             prepTime = recipe.prepTime,
             steps = recipe.steps,
+            url = recipe.url,
             ingredients = recipe.ingredients
         )
     except ObjectNotFoundException:
@@ -51,7 +54,24 @@ async def get_recipe(id: int, controller: RecipeController = Depends(RecipeContr
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Recipe with this ID has not been found"
         )
+    
+@router.get("/{id}/steps", response_model=List[StepSummary])
+async def get_recipe_steps(id: int, controller: StepController = Depends(StepController)):
 
+    try:
+        steps = controller.get_steps_by_recipe(id)
+    except ObjectNotFoundException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No steps found for this recipe, or this recipe does not exist"
+        )
+
+    serialized_steps = []
+    for step in steps:
+        serialized_step = StepSummary(**step.__dict__)
+        serialized_steps.append(serialized_step)
+
+    return steps
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=int)
 async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Depends(RecipeController)):
