@@ -11,7 +11,10 @@ from .models.ingredients import engine as ingredientsEngine
 from .models.ingredients_recipes import Base as irBase
 from .models.ingredients_recipes import engine as irEngine
 
-app = FastAPI()
+app = FastAPI(
+    title="RecipeAPI",
+    version="0.0.1a"
+)
 
 app.include_router(recipes.router)
 app.include_router(ingredients.router)
