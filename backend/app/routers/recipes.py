@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
-from typing import List
-from sqlalchemy.orm import Session
+from fastapi import Query as fQuery
+from typing import List, Annotated
+from sqlalchemy.orm import Session, Query
 
 from ..database import get_db
 from ..models import recipes as recipeModels
@@ -18,7 +19,7 @@ router = APIRouter(
 async def get_recipes(
     name: str = None,
     cookTime: str = None,
-    ingredients: List[str] = [],
+    ingredients: Annotated[list[str] | None, fQuery()] = None,
     controller: RecipeController = Depends(RecipeController)
 ):
     recipes = controller.get_recipes(name, cookTime, ingredients)

@@ -1,6 +1,7 @@
-from fastapi import Depends
-from sqlalchemy.orm import Session, Query
-from typing import List
+from fastapi import Depends, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from typing import List, Annotated
 import datetime
 
 from ..database import get_db
@@ -18,7 +19,11 @@ class RecipeController(Controller):
 
         self.ingredients_controller = IngredientController(db)
 
-    def get_recipes(self, name: str, cookTime: str, ingredients: List[str]):
+    def get_recipes(self, 
+                    name: str, 
+                    cookTime: str, 
+                    ingredients: Annotated[list[str] | None, Query()]):
+        
         query = self.db.query(Recipe)
 
         if name:
@@ -28,12 +33,14 @@ class RecipeController(Controller):
             ct = datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
 
             query = query.filter(Recipe.cookTime <= ct)
-        if len(ingredients) > 0:
-            for ingredient in ingredients:
-                query = query.join(Ingredient).filter(Ingredient.name.icontains(ingredient))
+        if ingredients:
+            ingredients = [ingredient.lower() for ingredient in ingredients]
+            query = (query.join(Recipe.ingredients)
+                    .where(func.lower(Ingredient.name)
+                    .in_(ingredients))
+                    .group_by(Recipe.id)
+                    .having(func.count(func.distinct(Ingredient.id)) == len(ingredients)))
 
-        print(ingredients)
-            
         return query.all()
     
     def get_recipe(self, recipe_id: int):

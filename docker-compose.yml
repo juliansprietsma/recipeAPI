@@ -24,6 +24,9 @@ services:
 
     environment:
       - http://localhost:${BACKEND_PORT}
+
+    depends_on:
+      - backend
   
   postgres:
     image: postgres:latest
