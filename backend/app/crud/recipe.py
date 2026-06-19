@@ -36,8 +36,7 @@ class RecipeController(Controller):
         if ingredients:
             ingredients = [ingredient.lower() for ingredient in ingredients]
             query = (query.join(Recipe.ingredients)
-                    .where(func.lower(Ingredient.name)
-                    .in_(ingredients))
+                    .where(func.lower(Ingredient.name).in_(ingredients))
                     .group_by(Recipe.id)
                     .having(func.count(func.distinct(Ingredient.id)) == len(ingredients)))
 
