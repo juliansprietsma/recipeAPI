@@ -18,51 +18,116 @@
 
     </section>
 
+    <recipe-finder id="recipe-finder"></recipe-finder>
 
-    <section class="section">
-        <div class="container has-text-centered">
-            <p class="subtitle">Find a recipe:</p>
-            <p>
-                Press the options button (marked by <i class="fa-solid fa-bars-staggered"></i>) to see more filtering options. 
-                To add an ingredient, type the ingredient and press the plus button or press enter.<br>
-                To remove an ingredient from the list, click on it.
-            </p>
-            <br>
-            <div class="level mb-4">
-                <input class="input" type="text" placeholder="Name of recipe">
-                <button class=" button level-right is-info" onclick="showOptions()"><i class="fa-solid fa-bars-staggered"></i></button>
-            </div>
-            <div class="fixed-grid" id="options" style="display:none;">
-                <div class="grid">
-                    <div class="cell has-text-centered">
-                        <div>
-                            <p class="heading">Cooking time:</p>
-                            <input class="input" type="time" step="1">
-                        </div>
-                    </div>
+    <template id="recipe-finder">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
 
-                    <div class="cell has-text-centered">
-                        <div>
-                            <p class="heading">Ingredients:</p>
-                            <div class="level">
-                                <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
-                                <button class="button level-right is-info" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+        <h1 id="test">Test</h1>
+
+        <section class="section">
+            <div class="container has-text-centered">
+                <p class="subtitle">Find a recipe:</p>
+                <p>
+                    Press the options button (marked by <i class="fa-solid fa-bars-staggered"></i>) to see more filtering options. 
+                    To add an ingredient, type the ingredient and press the plus button or press enter.<br>
+                    To remove an ingredient from the list, click on it.
+                </p>
+                <br>
+                <div class="level mb-4">
+                    <input class="input" type="text" placeholder="Name of recipe" id="name">
+                    <button class=" button level-right is-info" onclick="showOptions()"><i class="fa-solid fa-bars-staggered"></i></button>
+                </div>
+                <div class="fixed-grid" id="options" style="display:none;">
+                    <div class="grid">
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Cooking time:</p>
+                                <input class="input" type="time" step="1" id="cookTime">
                             </div>
                         </div>
-                    </div>
 
-                    <div class="cell"></div>
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Ingredients:</p>
+                                <div class="level">
+                                    <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
+                                    <button class="button level-right is-info" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="cell tags" id="ingredientList">
+                        <div class="cell"></div>
+
+                        <div class="cell tags" id="ingredientList">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="container has-text-centered">
-                <button class="button is-danger">Search</button>
-            </div>
-        </div>
-    </section>
+                <div class="container has-text-centered">
+                    <button class="button is-danger" id="search">Search</button>
+                </div>
 
+
+                <div id="recipes">
+
+                </div>
+            </div>
+        </section>
+
+        <script>
+            function showOptions() {
+                var opt = document.getElementById("options");
+                if (opt.style.display == "none") {
+                    opt.style.display = "";
+                } else {
+                    opt.style.display = "none";
+                }
+            }
+
+
+            const ingredientInput = document.getElementById("ingredientInput");
+            const ingredientList = document.getElementById("ingredientList");
+
+            function addItem() {
+                const text = ingredientInput.value.trim();
+                if (!text) return;
+
+                const span = document.createElement("span");
+                span.textContent = text;
+                span.classList.add("tag", "is-info");
+
+                span.addEventListener("click", () => {
+                    span.remove();
+                });
+
+                ingredientList.appendChild(span);
+                ingredientInput.value = "";
+                ingredientInput.focus();
+            }
+
+            ingredientInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    addItem();
+                }
+            });
+
+        </script>
+
+    </template>
+
+
+
+    <template id="recipe-summary">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
+
+        <div class="container is-primary is-widescreen">
+            <h5 class="mb-0">
+                <slot name="id"></slot> - <slot name="name"></slot> (<slot name="url"></slot>)
+            </h5>
+        </div>
+    </template>
     
 
     <footer class="footer">
@@ -74,45 +139,7 @@
         </div>
     </footer>
 
-
-    <script>
-        function showOptions() {
-            var opt = document.getElementById("options");
-            if (opt.style.display == "none") {
-                opt.style.display = "";
-            } else {
-                opt.style.display = "none";
-            }
-        }
-
-
-        const ingredientInput = document.getElementById("ingredientInput");
-        const ingredientList = document.getElementById("ingredientList");
-
-        function addItem() {
-            const text = ingredientInput.value.trim();
-            if (!text) return;
-
-            const span = document.createElement("span");
-            span.textContent = text;
-            span.classList.add("tag", "is-info");
-
-            span.addEventListener("click", () => {
-                span.remove();
-            });
-
-            ingredientList.appendChild(span);
-            ingredientInput.value = "";
-            ingredientInput.focus();
-        }
-
-        ingredientInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                addItem();
-            }
-        });
-
-    </script>
+    <script type="module" src="main.js"></script>
 
 </body>
 </html>
