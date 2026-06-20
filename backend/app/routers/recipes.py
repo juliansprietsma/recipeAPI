@@ -7,8 +7,10 @@ from ..database import get_db
 from ..models import recipes as recipeModels
 from ..schemas.recipes import RecipeSummary, RecipeCreate, Recipe
 from ..schemas.steps import StepSummary
+from ..schemas.ingredients import IngredientSummary
 from ..crud.recipe import RecipeController
 from ..crud.step import StepController
+from ..crud.ingredient import IngredientController
 from ..crud import ObjectNotFoundException, MultipleInstancesFoundException
 
 router = APIRouter(
@@ -31,7 +33,7 @@ async def get_recipes(
         serialized_recipe = RecipeSummary(**recipe.__dict__)
         serialized_recipes.append(serialized_recipe)
 
-    return recipes
+    return serialized_recipes
 
 
 @router.get("/{id}", response_model=Recipe, status_code=status.HTTP_200_OK)
@@ -55,6 +57,26 @@ async def get_recipe(id: int, controller: RecipeController = Depends(RecipeContr
             detail="Recipe with this ID has not been found"
         )
     
+@router.get("/{id}/ingredients", response_model=List[IngredientSummary])
+async def get_recipe_ingredients(id: int,
+                                 controller: IngredientController = Depends(IngredientController)):
+    
+    try:
+        ingredients = controller.get_ingredients_by_recipe(id)
+
+        serialized_ingredients = []
+        for ingredient in ingredients:
+            serialized_ingredient = IngredientSummary(**ingredient.__dict__)
+            serialized_ingredients.append(serialized_ingredient)
+
+        return serialized_ingredients
+    except ObjectNotFoundException as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    
+    
 @router.get("/{id}/steps", response_model=List[StepSummary])
 async def get_recipe_steps(id: int, 
                            stepNr: int  = None,
@@ -68,7 +90,7 @@ async def get_recipe_steps(id: int,
             serialized_step = StepSummary(**step.__dict__)
             serialized_steps.append(serialized_step)
 
-        return steps
+        return serialized_steps
     except ObjectNotFoundException as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

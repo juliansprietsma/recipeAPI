@@ -3,6 +3,7 @@ from sqlalchemy.orm import Query
 from . import ObjectNotFoundException, MultipleInstancesFoundException
 from .controller import Controller
 from ..models.ingredients import Ingredient
+from ..models.recipes import Recipe
 
 class IngredientController(Controller):
     def get_ingredient(self, ingredient_id: int):
@@ -24,6 +25,16 @@ class IngredientController(Controller):
             raise MultipleInstancesFoundException(f"Multiple ingredients with the same properties found")
         
         return ingredients.first()
+    
+    def get_ingredients_by_recipe(self,
+                                  recipeID: int):
+        
+        ingredients: Query = self.db.query(Ingredient).join(Recipe.ingredients).where(Recipe.id == recipeID)
+        
+        if ingredients.count() < 1:
+            raise ObjectNotFoundException(f"No ingredients found for recipe {recipeID}")
+
+        return ingredients.all()
     
     def create_ingredient(self, ingredient_name: str, ingredient_amount: float, ingredient_unit: str, commit=False):
         db_ingredient = Ingredient(
