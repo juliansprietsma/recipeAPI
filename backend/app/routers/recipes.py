@@ -26,15 +26,20 @@ async def get_recipes(
     ingredients: Annotated[list[str] | None, fQuery()] = None,
     controller: RecipeController = Depends(RecipeController)
 ):
-    recipes = controller.get_recipes(name, cookTime, ingredients)
+    try:
+        recipes = controller.get_recipes(name, cookTime, ingredients)
 
-    serialized_recipes = []
-    for recipe in recipes:
-        serialized_recipe = RecipeSummary(**recipe.__dict__)
-        serialized_recipes.append(serialized_recipe)
+        serialized_recipes = []
+        for recipe in recipes:
+            serialized_recipe = RecipeSummary(**recipe.__dict__)
+            serialized_recipes.append(serialized_recipe)
 
-    return serialized_recipes
-
+        return serialized_recipes
+    except ObjectNotFoundException as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
 
 @router.get("/{id}", response_model=Recipe, status_code=status.HTTP_200_OK)
 async def get_recipe(id: int, controller: RecipeController = Depends(RecipeController)):

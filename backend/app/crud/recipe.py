@@ -42,6 +42,10 @@ class RecipeController(Controller):
                     .group_by(Recipe.id)
                     .having(func.count(func.distinct(Ingredient.id)) == len(ingredients)))
 
+        if query.count() < 1:
+            raise ObjectNotFoundException("No recipes found")
+
+
         return query.all()
     
     def get_recipe(self, recipe_id: int):
