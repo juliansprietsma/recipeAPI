@@ -1,11 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frontend</title>
-</head>
-<body>
-    <h1 style="color: #C8102E">Test</h1>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RecipeAPI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+    <section class="hero is-link">
+
+        <div class="hero-body has-text-centered">
+            <p class="title">RecipeAPI</p>
+            <p class="subtitle">Made by juliansprietsma</p>
+        </div>
+
+    </section>
+
+
+    <section class="section">
+        <div class="container has-text-centered">
+            <p class="subtitle">Find a recipe:</p>
+            <div class="level mb-4">
+                <input class="input" type="text" placeholder="Name of recipe">
+                <button class=" button level-right is-info" onclick="showOptions()"><i class="fa-solid fa-bars-staggered"></i></button>
+            </div>
+            <div class="fixed-grid" id="options" style="display:none;">
+                <div class="grid">
+                    <div class="cell has-text-centered">
+                        <div>
+                            <p class="heading">Cooking time:</p>
+                            <input class="input" type="time" step="1">
+                        </div>
+                    </div>
+
+                    <div class="cell has-text-centered">
+                        <div>
+                            <p class="heading">Ingredients:</p>
+                            <div class="level">
+                                <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
+                                <button class="button level-right is-info" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cell"></div>
+
+                    <div class="cell tags" id="ingredientList">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <footer class="footer">
+        <div class="has-text-centered">
+            <p>
+                <strong>RecipeAPI</strong> by <a href="https://github.com/juliansprietsma">juliansprietsma</a>.
+                Find the source code <strong><a href="https://github.com/juliansprietsma/recipeAPI">here</a></strong>
+            </p>
+        </div>
+    </footer>
+
+
+    <script>
+        function showOptions() {
+            var opt = document.getElementById("options");
+            if (opt.style.display == "none") {
+                opt.style.display = "";
+            } else {
+                opt.style.display = "none";
+            }
+        }
+
+
+        const ingredientInput = document.getElementById("ingredientInput");
+        const ingredientList = document.getElementById("ingredientList");
+
+        function addItem() {
+            const text = ingredientInput.value.trim();
+            if (!text) return;
+
+            const span = document.createElement("span");
+            span.textContent = text;
+            span.classList.add("tag", "is-info");
+
+            span.addEventListener("click", () => {
+                span.remove();
+            });
+
+            ingredientList.appendChild(span);
+            ingredientInput.value = "";
+            ingredientInput.focus();
+        }
+
+        ingredientInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                addItem();
+            }
+        });
+
+    </script>
+
 </body>
 </html>
