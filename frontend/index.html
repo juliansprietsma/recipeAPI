@@ -22,6 +22,12 @@
     <section class="section">
         <div class="container has-text-centered">
             <p class="subtitle">Find a recipe:</p>
+            <p>
+                Press the options button (marked by <i class="fa-solid fa-bars-staggered"></i>) to see more filtering options. 
+                To add an ingredient, type the ingredient and press the plus button or press enter.<br>
+                To remove an ingredient from the list, click on it.
+            </p>
+            <br>
             <div class="level mb-4">
                 <input class="input" type="text" placeholder="Name of recipe">
                 <button class=" button level-right is-info" onclick="showOptions()"><i class="fa-solid fa-bars-staggered"></i></button>
@@ -49,8 +55,10 @@
 
                     <div class="cell tags" id="ingredientList">
                     </div>
-
                 </div>
+            </div>
+            <div class="container has-text-centered">
+                <button class="button is-danger">Search</button>
             </div>
         </div>
     </section>
