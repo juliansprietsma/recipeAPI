@@ -11,7 +11,7 @@ frontend that is yet to be implemented. For more information on these, see the l
 First copy `.env.example` and rename it to `.env`
 
 ```bash
-mv .env.example .env
+cp .env.example .env
 ```
 
 then edit the variables in .env
@@ -36,6 +36,7 @@ git clone git@github.com:juliansprietsma/recipeAPI.git
 Use uv to create an environment and activate it
 
 ```bash
+cd backend
 uv venv
 source .venv/bin/activate
 ```

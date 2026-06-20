@@ -11,7 +11,8 @@ class Recipe(Base):
     name = Column("Name", String, nullable=False)
     cookTime = Column("Cooking_time", Interval, nullable=False)
     prepTime = Column("Preparation_time", Interval, nullable=True)
-    steps = Column("Steps", Text, nullable=True)
+    steps = relationship("Steps", back_populates="recipes")
+    url = Column("URL", String, nullable=True)
 
     ingredients = relationship(
         "Ingredient", secondary=ingredients_recipes_table, back_populates="recipes"
