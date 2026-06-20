@@ -25,21 +25,64 @@ Underneath you can find a curated list of endpoints, their parameters, their sta
 
 ### /recipes GET
 
+> Parameters:
+>
+> name: str
+>
+> cookTime: str ("hh:mm:ss")
+>
+> ingredients: List[str]
+
 response codes:
 - 200: Success
+- 404: Not found
 
 ### /recipes POST
 
+> Parameters:
+>
 > recipe: RecipeCreate
 
 response codes:
 - 201: Succesful creation
 - 404: Not found
-- 400: Bad request
+- 400: Bad request (object already exists)
 - 500: Internal Server Error
 
 ### /recipes/{id} GET
 
+> Parameters:
+>
+> id: int
+
+response codes:
+- 200: Success
+- 404: Not found
+
+### /recipes/{id}/ingredients GET
+
+> Parameters:
+>
+> id: int
+
+response codes:
+- 200: Success
+- 404: Not found
+
+### /recipes/{id}/steps GET
+
+> Parameters:
+>
+> id: int
+
+response codes:
+- 200: Success
+- 404: Not found
+
+### /ingredients/{id} GET
+
+> Parameters:
+>
 > id: int
 
 response codes:

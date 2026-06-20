@@ -1,11 +1,16 @@
-from fastapi import Depends
-from sqlalchemy.orm import Session, Query
+from fastapi import Depends, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+from typing import List, Annotated
+import datetime
 
 from ..database import get_db
 from ..models.recipes import Recipe
+from ..models.ingredients import Ingredient
 from ..schemas.recipes import RecipeCreate
 from .controller import Controller
 from .ingredient import IngredientController
+from .step import StepController
 from . import ObjectNotFoundException, AlreadyExistsException
 
 
@@ -14,11 +19,34 @@ class RecipeController(Controller):
         super().__init__(db)
 
         self.ingredients_controller = IngredientController(db)
+        self.step_controller = StepController(db)
 
-    def get_recipes(self):
-        query = self.db.query(Recipe).all()
+    def get_recipes(self, 
+                    name: str, 
+                    cookTime: str, 
+                    ingredients: Annotated[list[str] | None, Query()]):
+        
+        query = self.db.query(Recipe)
 
-        return query
+        if name:
+            query = query.filter(Recipe.name.icontains(name))
+        if cookTime:
+            t = datetime.datetime.strptime(cookTime, "%H:%M:%S")
+            ct = datetime.timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+
+            query = query.filter(Recipe.cookTime <= ct)
+        if ingredients:
+            ingredients = [ingredient.lower() for ingredient in ingredients]
+            query = (query.join(Recipe.ingredients)
+                    .where(func.lower(Ingredient.name).in_(ingredients))
+                    .group_by(Recipe.id)
+                    .having(func.count(func.distinct(Ingredient.id)) == len(ingredients)))
+
+        if query.count() < 1:
+            raise ObjectNotFoundException("No recipes found")
+
+
+        return query.all()
     
     def get_recipe(self, recipe_id: int):
         db_recipes: Query = self.db.query(Recipe).filter(Recipe.id == recipe_id)
@@ -44,11 +72,20 @@ class RecipeController(Controller):
             )
             db_ingredients.append(db_ingredient)
 
+        db_steps = []
+        for step in recipe.steps:
+            db_step = self.step_controller.create_step(
+                stepNr=step.stepNr,
+                step=step.step
+            )
+            db_steps.append(db_step)
+
         db_recipe = Recipe(
             name=recipe.name,
             cookTime=recipe.cookTime,
             prepTime=recipe.prepTime,
-            steps=recipe.steps,
+            steps=db_steps,
+            url=recipe.url,
             ingredients=db_ingredients
         )
 
