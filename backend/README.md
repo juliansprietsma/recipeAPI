@@ -27,9 +27,10 @@ Underneath you can find a curated list of endpoints, their parameters, their sta
 
 > Parameters:
 >
->
 > name: str
+>
 > cookTime: str ("hh:mm:ss")
+>
 > ingredients: List[str]
 
 response codes:
