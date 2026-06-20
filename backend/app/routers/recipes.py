@@ -56,22 +56,24 @@ async def get_recipe(id: int, controller: RecipeController = Depends(RecipeContr
         )
     
 @router.get("/{id}/steps", response_model=List[StepSummary])
-async def get_recipe_steps(id: int, controller: StepController = Depends(StepController)):
+async def get_recipe_steps(id: int, 
+                           stepNr: int  = None,
+                           controller: StepController = Depends(StepController)):
 
     try:
-        steps = controller.get_steps_by_recipe(id)
-    except ObjectNotFoundException:
+        steps = controller.get_steps_by_recipe(id, stepNr)
+
+        serialized_steps = []
+        for step in steps:
+            serialized_step = StepSummary(**step.__dict__)
+            serialized_steps.append(serialized_step)
+
+        return steps
+    except ObjectNotFoundException as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No steps found for this recipe, or this recipe does not exist"
+            detail=str(e)
         )
-
-    serialized_steps = []
-    for step in steps:
-        serialized_step = StepSummary(**step.__dict__)
-        serialized_steps.append(serialized_step)
-
-    return steps
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=int)
 async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Depends(RecipeController)):
