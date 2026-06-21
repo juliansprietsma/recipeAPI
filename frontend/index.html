@@ -20,6 +20,15 @@
 
     <recipe-finder id="finder"></recipe-finder>
 
+
+    <recipe-create id="creator" style="display:none;"></recipe-create>
+
+
+
+
+
+    <!-- Templates -->
+
     <template id="recipe-finder">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
         <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
@@ -35,7 +44,10 @@
                 <br>
                 <div class="level mb-4">
                     <input class="input" type="text" placeholder="Name of recipe" id="name">
-                    <button class=" button level-right is-info" id="options-button">Options</button>
+                    <div class="level-right">
+                        <button class="button level-item is-info" id="create-button">Create</button>
+                        <button class="button level-item is-info" id="options-button">Options</button>
+                    </div>
                 </div>
                 <div class="fixed-grid" id="options" style="display:none;">
                     <div class="grid">
@@ -63,7 +75,7 @@
                     </div>
                 </div>
                 <div class="container has-text-centered">
-                    <button class="button is-danger" id="search">Search</button>
+                    <button class="button is-danger" id="search">Search!</button>
                 </div>
 
 
@@ -74,6 +86,62 @@
         </section>
     </template>
 
+
+    <template id="recipe-create">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+
+        <section class="section">
+            <div class="container has-text-centered">
+                <p class="subtitle">Create a recipe:</p>
+                <p>
+                    Fill in the following fields and press the "create" button to create a new recipe.<br>
+                    Press the "Search" button to search for a recipe instead.
+                </p>
+                <br>
+                <div class="level mb-4">
+                    <input class="input" type="text" placeholder="Name of recipe" id="name">
+                    <div class="level-right">
+                        <button class="button level-item is-info" id="search-button">Search</button>
+                    </div>
+                </div>
+                <div class="fixed-grid" id="options" style="display:none;">
+                    <div class="grid">
+                        <div class="cell has-text-centered">
+                            <p class="heading">url:</p>
+                            <input class="input" type="text" id="url">
+                        </div>
+
+                        <!-- <div class="cell has-text-centered"> 
+                            <div>
+                                <p class="heading">Cooking time:</p>
+                                <input class="input" type="time" step="1" id="cookTime">
+                            </div>
+                        </div>
+
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Ingredients:</p>
+                                <div class="level">
+                                    <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
+                                    <button class="button level-right is-info" id="ingredientAdd">Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cell"></div>
+
+                        <div class="cell tags" id="ingredientList">
+                        </div> -->
+                    </div>
+                </div>
+                <div class="container has-text-centered">
+                    <button class="button is-danger" id="create-button">Create!</button>
+                </div>
+            </div>
+        </section>
+
+    </template>
+    
 
 
     <template id="recipe-summary">

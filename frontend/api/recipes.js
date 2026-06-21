@@ -13,10 +13,16 @@ export default {
      */
     async get_recipes(name = null, cookTime = null, ingredients = []) {
 
-        const apiResponse = await apiCall("recipes", "GET", {
-            name: name,
-            cookTime: cookTime
+        const params = new URLSearchParams();
+
+        params.append("name", name);
+        params.append("cookTime", cookTime);
+
+        ingredients.forEach(ingredient => {
+            params.append("ingredients", ingredient);
         });
+
+        const apiResponse = await apiCall("recipes", "GET", params);
 
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 

@@ -1,8 +1,7 @@
 import recipes from "../api/recipes.js";
 import ApiRecipeSummary from "../models/recipe-summary.js"
 import RecipeSummary from "./recipe-summary.js";
-
-
+import RecipeCreator from "./recipe-create.js";
 
 export class RecipeSelectedEvent extends Event {
     /** @type {number} */
@@ -27,7 +26,10 @@ export default class RecipeFinder extends HTMLElement {
     /** @type {HTMLInputElement} */ #ingredientInput;
     /** @type {HTMLDivElement} */ #ingredientList;
     /** @type {HTMLButtonElement} */ #ingredientAdd;
-
+    /** @type {HTMLButtonElement} */ #createButton;
+    /** @type {HTMLDivElement} */ #createElement;
+    /** @type {RecipeFinder} */ #recipeFinder;
+ 
 
     /** @type {boolean} */ #hasResults = false;
 
@@ -50,6 +52,14 @@ export default class RecipeFinder extends HTMLElement {
         this.#options = this.shadowRoot.getElementById("options-button");
         this.#ingredientAdd = this.shadowRoot.getElementById("ingredientAdd");
 
+        this.#createButton = this.shadowRoot.getElementById("create-button");
+        this.#createElement = document.getElementById("creator");
+        this.#recipeFinder = document.getElementById("finder");
+
+        this.#createButton.addEventListener("click", async() => {
+            await this.showCreate();
+        });
+
         this.#ingredientAdd.addEventListener("click", async() => {
             await this.addItem();
         });
@@ -62,11 +72,22 @@ export default class RecipeFinder extends HTMLElement {
             await this.search();
         });
 
-        this.#ingredientInput.addEventListener("keydown", (e) => {
+        this.#ingredientInput.addEventListener("keydown", async (e) => {
             if (e.key === "Enter") {
-                this.addItem();
+                await this.addItem();
             }
         });
+
+        this.#search.addEventListener("keydown", async (e) => {
+            if (e.key === "Enter") {
+                await this.search();
+            }
+        });
+    }
+
+    async showCreate() {
+        this.#createElement.style.display = "";
+        this.#recipeFinder.style.display = "none";
     }
 
     async showOptions() {
@@ -98,12 +119,16 @@ export default class RecipeFinder extends HTMLElement {
     async search() {
         let name = this.#nameSearch.value;
         let cookTime = this.#cookTimeSearch.value;
-
+        let ingredients = [];
+        var children = this.#ingredientList.children;
+        for (var i = 0; i < children.length; i++) {
+            ingredients.push(children[i].textContent);
+        }
 
         /** @type {ApiRecipeSummary[]} */
         let recipeResult;
         try {
-            recipeResult = await recipes.get_recipes(name=name, cookTime=cookTime);
+            recipeResult = await recipes.get_recipes(name=name, cookTime=cookTime, ingredients=ingredients);
         } catch(e) {
             alert(e);
             return;
