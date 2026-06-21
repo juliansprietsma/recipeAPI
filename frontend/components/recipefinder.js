@@ -78,7 +78,13 @@ export default class RecipeFinder extends HTMLElement {
             }
         });
 
-        this.#search.addEventListener("keydown", async (e) => {
+        this.#nameSearch.addEventListener("keydown", async (e) => {
+            if (e.key === "Enter") {
+                await this.search();
+            }
+        });
+
+        this.#cookTimeSearch.addEventListener("keydown", async (e) => {
             if (e.key === "Enter") {
                 await this.search();
             }
