@@ -1,1 +1,1 @@
-import RecipeFinder from "./components/recipe-finder.js";
+import RecipeFinder from './components/recipefinder.js';

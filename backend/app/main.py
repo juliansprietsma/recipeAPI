@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .routers import ingredients
 from .routers import recipes
 
@@ -19,13 +20,21 @@ app = FastAPI(
     version="0.0.1a"
 )
 
-app.include_router(recipes.router)
-app.include_router(ingredients.router)
-
 recipesBase.metadata.create_all(bind=recipesEngine)
 ingredientsBase.metadata.create_all(bind=ingredientsEngine)
 irBase.metadata.create_all(bind=irEngine)
 stepsBase.metadata.create_all(bind=stepsEngine)
+
+app.add_middleware (
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(recipes.router)
+app.include_router(ingredients.router)
 
 @app.get("/")
 async def root():

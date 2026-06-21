@@ -18,13 +18,11 @@
 
     </section>
 
-    <recipe-finder id="recipe-finder"></recipe-finder>
+    <recipe-finder id="finder"></recipe-finder>
 
     <template id="recipe-finder">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
         <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
-
-        <h1 id="test">Test</h1>
 
         <section class="section">
             <div class="container has-text-centered">
@@ -37,7 +35,7 @@
                 <br>
                 <div class="level mb-4">
                     <input class="input" type="text" placeholder="Name of recipe" id="name">
-                    <button class=" button level-right is-info" onclick="showOptions()"><i class="fa-solid fa-bars-staggered"></i></button>
+                    <button class=" button level-right is-info" id="options-button">Options</button>
                 </div>
                 <div class="fixed-grid" id="options" style="display:none;">
                     <div class="grid">
@@ -53,7 +51,7 @@
                                 <p class="heading">Ingredients:</p>
                                 <div class="level">
                                     <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
-                                    <button class="button level-right is-info" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+                                    <button class="button level-right is-info" id="ingredientAdd">Add</button>
                                 </div>
                             </div>
                         </div>
@@ -74,46 +72,6 @@
                 </div>
             </div>
         </section>
-
-        <script>
-            function showOptions() {
-                var opt = document.getElementById("options");
-                if (opt.style.display == "none") {
-                    opt.style.display = "";
-                } else {
-                    opt.style.display = "none";
-                }
-            }
-
-
-            const ingredientInput = document.getElementById("ingredientInput");
-            const ingredientList = document.getElementById("ingredientList");
-
-            function addItem() {
-                const text = ingredientInput.value.trim();
-                if (!text) return;
-
-                const span = document.createElement("span");
-                span.textContent = text;
-                span.classList.add("tag", "is-info");
-
-                span.addEventListener("click", () => {
-                    span.remove();
-                });
-
-                ingredientList.appendChild(span);
-                ingredientInput.value = "";
-                ingredientInput.focus();
-            }
-
-            ingredientInput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    addItem();
-                }
-            });
-
-        </script>
-
     </template>
 
 
@@ -122,11 +80,19 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
         <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
 
-        <div class="container is-primary is-widescreen">
-            <h5 class="mb-0">
-                <slot name="id"></slot> - <slot name="name"></slot> (<slot name="url"></slot>)
-            </h5>
+        <div class="container has-text-centered mt-5">
+            <div class="notification is-info">
+                <p class="subtitle">
+                    <slot name="id"></slot> - <slot name="name"></slot> (<slot name="url"></slot>)
+                </p>
+            </div>
         </div>
+
+        <style>
+            :host {
+                cursor: pointer;
+            }
+        </style>
     </template>
     
 

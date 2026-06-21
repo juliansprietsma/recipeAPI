@@ -3,6 +3,7 @@ import ApiRecipeSummary from "../models/recipe-summary.js"
 import RecipeSummary from "./recipe-summary.js";
 
 
+
 export class RecipeSelectedEvent extends Event {
     /** @type {number} */
     recipeId;
@@ -21,7 +22,11 @@ export default class RecipeFinder extends HTMLElement {
     /** @type {HTMLInputElement} */ #nameSearch;
     /** @type {HTMLInputElement} */ #cookTimeSearch;
     /** @type {HTMLButtonElement} */ #search;
+    /** @type {HTMLButtonElement} */ #options;
     /** @type {HTMLDivElement} */ #results;
+    /** @type {HTMLInputElement} */ #ingredientInput;
+    /** @type {HTMLDivElement} */ #ingredientList;
+    /** @type {HTMLButtonElement} */ #ingredientAdd;
 
 
     /** @type {boolean} */ #hasResults = false;
@@ -33,18 +38,61 @@ export default class RecipeFinder extends HTMLElement {
         const template = document.getElementById("recipe-finder");
         const templateContent = template.content;
 
-        this.attachShadow({ mode: open });
+        this.attachShadow({ mode: "open" });
         this.shadowRoot.appendChild(templateContent.cloneNode(true));
 
         this.#nameSearch = this.shadowRoot.getElementById("name");
         this.#cookTimeSearch = this.shadowRoot.getElementById("cookTime");
         this.#search = this.shadowRoot.getElementById("search");
         this.#results = this.shadowRoot.getElementById("recipes");
+        this.#ingredientInput = this.shadowRoot.getElementById("ingredientInput");
+        this.#ingredientList = this.shadowRoot.getElementById("ingredientList");
+        this.#options = this.shadowRoot.getElementById("options-button");
+        this.#ingredientAdd = this.shadowRoot.getElementById("ingredientAdd");
 
+        this.#ingredientAdd.addEventListener("click", async() => {
+            await this.addItem();
+        });
+
+        this.#options.addEventListener("click", async () => {
+            await this.showOptions();
+        });
 
         this.#search.addEventListener("click", async () => {
             await this.search();
         });
+
+        this.#ingredientInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                this.addItem();
+            }
+        });
+    }
+
+    async showOptions() {
+        var opt = this.shadowRoot.getElementById("options");
+        if (opt.style.display == "none") {
+            opt.style.display = "";
+        } else {
+            opt.style.display = "none";
+        }
+    }
+
+    async addItem() {
+        const text = this.#ingredientInput.value.trim();
+        if (!text) return;
+
+        const span = document.createElement("span");
+        span.textContent = text;
+        span.classList.add("tag", "is-info");
+
+        span.addEventListener("click", () => {
+            span.remove();
+        });
+
+        this.#ingredientList.appendChild(span);
+        this.#ingredientInput.value = "";
+        this.#ingredientInput.focus();
     }
 
     async search() {
@@ -55,7 +103,7 @@ export default class RecipeFinder extends HTMLElement {
         /** @type {ApiRecipeSummary[]} */
         let recipeResult;
         try {
-            recipeResult = await recipes.get_recipes(name=name, cookTime=cookTime, ingredients=[]);
+            recipeResult = await recipes.get_recipes(name=name, cookTime=cookTime);
         } catch(e) {
             alert(e);
             return;

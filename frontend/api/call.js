@@ -8,11 +8,11 @@
  * 
  */
 
-const server = "http://localhost:${BACKEND_PORT}";
+const server = "http://localhost:8000";
 
 export default async function apiCall(url, method = "GET", data = null) {
 
-    url = '${server}/${url}';
+    url = `${server}/${url}`;
 
     /** @type {RequestInit} */
     const requestConfig = {

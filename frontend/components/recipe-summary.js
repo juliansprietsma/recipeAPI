@@ -17,7 +17,7 @@ export default class RecipeSummary extends HTMLElement {
         const template = document.getElementById("recipe-summary");
         const templateContent = template.content;
 
-        this.attachShadow({ mode: open });
+        this.attachShadow({ mode: "open" });
 
         this.shadowRoot.appendChild(templateContent.cloneNode(true));
     }
