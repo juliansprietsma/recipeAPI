@@ -136,7 +136,11 @@ export default class RecipeFinder extends HTMLElement {
         try {
             recipeResult = await recipes.get_recipes(name=name, cookTime=cookTime, ingredients=ingredients);
         } catch(e) {
-            alert(e);
+            let resultText = document.createElement("h4");
+            resultText.classList.add("heading");
+            resultText.textContent = JSON.parse(e.message).detail;
+            this.#results.innerHTML = "";
+            this.#results.appendChild(resultText);
             return;
         }
 
