@@ -111,7 +111,7 @@ export default class RecipeFinder extends HTMLElement {
 
         const span = document.createElement("span");
         span.textContent = text;
-        span.classList.add("tag", "is-info");
+        span.classList.add("tag", "is-info", "hoverClass");
 
         span.addEventListener("click", () => {
             span.remove();

@@ -92,7 +92,7 @@ export default class RecipeCreator extends HTMLElement {
 
         const span = document.createElement("span");
         span.textContent = text;
-        span.classList.add("tag", "is-info");
+        span.classList.add("tag", "is-info", "hoverClass");
 
         span.addEventListener("click", () => {
             span.remove();
@@ -109,7 +109,8 @@ export default class RecipeCreator extends HTMLElement {
 
         const span = document.createElement("span");
         span.textContent = this.countSteps + ". " + text;
-        span.classList.add("tag", "is-info");
+        span.classList.add("tag", "is-info", "hoverClass");
+        
         this.countSteps += 1;
 
         span.addEventListener("click", () => {
