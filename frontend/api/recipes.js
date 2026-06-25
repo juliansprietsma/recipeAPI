@@ -38,6 +38,18 @@ export default {
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
         return Recipe.fromJson(await apiResponse.json());
+    },
+
+
+    /**
+     * @param {Recipe} recipe
+     * @returns {Number}
+     */
+    async create_recipe(recipe) {
+        const apiResponse = await apiCall('recipes', "POST", recipe);
+        if (!apiResponse.ok) throw new Error(await apiResponse.text)();
+
+        return Recipe.fromJson(await apiResponse.json());
     }
 
 

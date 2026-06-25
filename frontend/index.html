@@ -56,7 +56,7 @@
                             <div>
                                 <p class="heading">Ingredients:</p>
                                 <div class="level">
-                                    <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
+                                    <input class="level-item input" type="text" placeholder="ingredient" id="ingredientInput">
                                     <button class="button level-right is-info" id="ingredientAdd">Add</button>
                                 </div>
                             </div>
@@ -109,8 +109,11 @@
                     Press the "Search" button to search for a recipe instead.
                 </p>
                 <br>
-                <div class="level mb-4">
-                    <input class="input" type="text" placeholder="Type the name of the recipe" id="name">
+                <div>
+                    <div>
+                        <p class="heading">name:</p>
+                        <input class="input" type="text" placeholder="Type the name of the recipe" id="name">
+                    </div>
                 </div>
                 <div class="fixed-grid" id="options">
                     <div class="grid">
@@ -123,7 +126,11 @@
                             <div>
                                 <p class="heading">Ingredients:</p>
                                 <div class="level">
-                                    <input class="level-item input" type="text" placeholder="ingredients" id="ingredientInput">
+                                    <div class="level-item">
+                                        <input class="input" type="text" placeholder="ingredient" id="ingredientInput">
+                                        <input class="input" type="number" placeholder="amount" maxlength="5" id="ingredientAmount" style="max-width: 100px;">
+                                        <input class="input" type="text" placeholder="unit" maxlength="5" id="ingredientUnit" style="max-width: 100px;">
+                                    </div>
                                     <button class="button level-right is-info" id="ingredientAdd">Add</button>
                                 </div>
                             </div>
@@ -148,24 +155,15 @@
                             </div>
                         </div>
 
-                        <div class="cell has-text-centered">
-                            <div>
-                                <p class="heading">Steps:</p>
-                                <div class="level">
-                                    <input class="level-item input" type="text" placeholder="Steps" id="stepInput">
-                                    <button class="button level-right is-info" id="stepAdd">Add</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="cell"></div>
-
-                        <div class="cell tags" id="stepList">
-                            
-                        </div>
-
                     </div>
                 </div>
+                <div class="has-text-centered">
+                    <div>
+                        <p>Type the steps, seperated by whitespace (do not include step numbers)</p>
+                        <textarea class="textarea" placeholder="Steps" id="stepText" rows="10"></textarea>
+                    </div>
+                </div>
+
                 <div class="level">
                     <div class="section level-item has-text-centered">
                         <button class="button level-item is-warning mr-2 ml-2" id="search-button">Search</button>
