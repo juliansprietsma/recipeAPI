@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RecipeAPI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/css/all.min.css">
   </head>
   <body>
 
@@ -26,7 +26,8 @@
 
     <template id="recipe-finder">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-        <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/static/css/all.min.css">
+
 
         <section class="section">
             <div class="container has-text-centered">
@@ -40,7 +41,7 @@
                 <div class="level mb-4">
                     <input class="input" type="text" placeholder="Name of recipe" id="name">
                     <div class="level-right">
-                        <button class="button level-item is-info" id="options-button">Options</button>
+                        <button class="button level-item is-info" id="options-button"><i class="fa-solid fa-bars-staggered"></i></button>
                     </div>
                 </div>
                 <div class="fixed-grid" id="options" style="display:none;">
@@ -71,8 +72,8 @@
 
                 <div class="level">
                     <div class="section level-item has-text-centered">
-                        <button class="button level-item is-warning mr-2 ml-2" id="create-button">Create</button>
-                        <button class="button level-item is-info mr-2 ml-2" id="search">Search!</button>
+                        <button class="button level-item is-warning mr-2 ml-2" id="create-button"><i class="fa-solid fa-plus"></i> Create</button>
+                        <button class="button level-item is-info mr-2 ml-2" id="search"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
                     </div>
                 </div>
 
@@ -100,13 +101,14 @@
 
     <template id="recipe-create">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <link rel="stylesheet" href="/static/css/all.min.css">
 
         <section class="section">
             <div class="container has-text-centered">
                 <p class="subtitle">Create a recipe:</p>
                 <p>
-                    Fill in the following fields and press the "create" button to create a new recipe.<br>
-                    Press the "Search" button to search for a recipe instead.
+                    Fill in the following fields and press the "<i class="fa-solid fa-plus"></i> create" button to create a new recipe.<br>
+                    Press the "<i class="fa-solid fa-magnifying-glass"></i> Search" button to search for a recipe instead.
                 </p>
                 <br>
                 <div>
@@ -127,9 +129,9 @@
                                 <p class="heading">Ingredients:</p>
                                 <div class="level">
                                     <div class="level-item">
-                                        <input class="input" type="text" placeholder="ingredient" id="ingredientInput">
                                         <input class="input" type="number" placeholder="amount" maxlength="5" id="ingredientAmount" style="max-width: 100px;">
                                         <input class="input" type="text" placeholder="unit" maxlength="5" id="ingredientUnit" style="max-width: 100px;">
+                                        <input class="input" type="text" placeholder="ingredient" id="ingredientInput">
                                     </div>
                                     <button class="button level-right is-info" id="ingredientAdd">Add</button>
                                 </div>
@@ -166,8 +168,8 @@
 
                 <div class="level">
                     <div class="section level-item has-text-centered">
-                        <button class="button level-item is-warning mr-2 ml-2" id="search-button">Search</button>
-                        <button class="button level-item is-info mr-2 ml-2" id="create-button">Create!</button>
+                        <button class="button level-item is-warning mr-2 ml-2" id="search-button"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                        <button class="button level-item is-info mr-2 ml-2" id="create-button"><i class="fa-solid fa-plus"></i> Create</button>
                     </div>
                 </div>
             </div>
@@ -192,8 +194,11 @@
 
         <div class="cell has-text-centered mt-2">
             <div class="notification is-info">
+                <p class="title">
+                    <slot name="name"></slot> (<slot name="url"></slot>)
+                </p>
                 <p class="subtitle">
-                    <slot name="id"></slot> - <slot name="name"></slot> (<slot name="url"></slot>)
+                    <slot name="cookTime"></slot>
                 </p>
             </div>
         </div>
@@ -214,6 +219,10 @@
             </p>
         </div>
     </footer>
+
+    <style>
+        @import url("https://kit.fontawesome.com/99b2501698.js");
+    </style>
 
     <script type="module" src="main.js"></script>
 

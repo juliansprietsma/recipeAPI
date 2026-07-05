@@ -151,10 +151,6 @@ export default class RecipeFinder extends HTMLElement {
             let recipeView = new RecipeSummary();
             recipeView.recipeId = recipe.id;
 
-            let idSpan = document.createElement("span");
-            idSpan.slot = "id";
-            idSpan.innerText = recipe.id;
-
             let nameSpan = document.createElement("span");
             nameSpan.slot = "name";
             nameSpan.innerText = recipe.name;
@@ -163,10 +159,13 @@ export default class RecipeFinder extends HTMLElement {
             urlSpan.slot = "url";
             urlSpan.innerText = recipe.url;
 
+            let cookTimeSpan = document.createElement("span");
+            cookTimeSpan.slot = "cookTime";
+            cookTimeSpan.innerText = recipe.cookTime;
 
-            recipeView.appendChild(idSpan);
             recipeView.appendChild(nameSpan);
             recipeView.appendChild(urlSpan);
+            recipeView.appendChild(cookTimeSpan);
 
             recipeView.addEventListener("click", () => {
                 this.dispatchEvent(new RecipeSelectedEvent(recipeView.recipeId));

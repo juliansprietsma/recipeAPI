@@ -1,12 +1,17 @@
+import recipes from "../api/recipes.js";
+import Recipe from "../models/recipe.js";
 import RecipeFinder from "./recipefinder.js"
 
 export default class RecipeCreator extends HTMLElement {
     /** @type {HTMLInputElement} */ #name;
     /** @type {HTMLInputElement} */ #url;
-    /** @type {HTMLInputElement} */ #ingredientInput;
     /** @type {HTMLInputElement} */ #cookTime;
     /** @type {HTMLInputElement} */ #prepTime;
     /** @type {HTMLInputElement} */ #stepText;
+
+    /** @type {HTMLInputElement} */ #ingredientInput;
+    /** @type {HTMLInputElement} */ #ingredientAmountInput;
+    /** @type {HTMLInputElement} */ #ingredientUnitInput;
 
     /** @type {HTMLButtonElement} */ #searchButton;
     /** @type {HTMLButtonElement} */ #createButton;
@@ -27,10 +32,13 @@ export default class RecipeCreator extends HTMLElement {
 
         this.#name = this.shadowRoot.getElementById("name");
         this.#url = this.shadowRoot.getElementById("url");
-        this.#ingredientInput = this.shadowRoot.getElementById("ingredientInput");
         this.#cookTime = this.shadowRoot.getElementById("cookTime");
         this.#prepTime = this.shadowRoot.getElementById("prepTime");
         this.#stepText = this.shadowRoot.getElementById("stepText");
+
+        this.#ingredientInput = this.shadowRoot.getElementById("ingredientInput");
+        this.#ingredientAmountInput = this.shadowRoot.getElementById("ingredientAmount");
+        this.#ingredientUnitInput = this.shadowRoot.getElementById("ingredientUnit");
 
         this.#searchButton = this.shadowRoot.getElementById("search-button");
         this.#createButton = this.shadowRoot.getElementById("create-button");
@@ -42,6 +50,7 @@ export default class RecipeCreator extends HTMLElement {
         this.#recipeFinder = document.getElementById("finder");
 
         this.countSteps = 1;
+        this.ingredients = [];
 
 
         this.#searchButton.addEventListener("click", async() => {
@@ -58,85 +67,115 @@ export default class RecipeCreator extends HTMLElement {
             }
         })
 
-        this.#createButton.addEventListener("click", () => {
-            this.countSteps = 1;
-            this.#ingredientList.innerHTML = "";
-            
-            this.#name.value = "";
-            this.#url.value = "";
-            this.#cookTime.value = "";
-            this.#prepTime.value = "";
-            this.#ingredientInput.value = "";
-
-            alert(this.#stepText.value);
-            const steps = this.#stepText.value.split("\n");
-            for (let i = 0; i <= steps.length; i++) {
-                if (steps[i] == "") {
-                    steps.splice(i, 1);
-                    i--;
-                }
+        this.#ingredientAmountInput.addEventListener("keydown", async(e) => {
+            if (e.key === "Enter") {
+                await this.addIngredient();
             }
-            alert(steps);
+        })
 
+        this.#ingredientUnitInput.addEventListener("keydown", async(e) => {
+            if (e.key === "Enter") {
+                await this.addIngredient();
+            }
+        })
+
+        this.#createButton.addEventListener("click", async() => {
+            await this.create_recipe();
         });
     }
 
-    async create() {
+    async create_recipe() {
 
         if (this.#name.value == "" ||
-            this.#ingredientInput.value == "" ||
-            this.#stepText.value.split("\n") == ""
+            this.#stepText.value.split("\n") == "" ||
+            this.ingredients.length == 0
         ) {
             alert("Fill in all necessary fields (Name, cook time, prep time, ingredients and steps)");
         } else {
 
-            // Create list for ingredients
             
-            // Create list for steps
-
-            // Create new Recipe object
-
-            // Call create_recipe function with new Recipe object
-
-            // Return Transaction or throw errors (try except)
-
-        }
-    
-
-
-        const steps = this.#stepText.value.split("\n");
-        for (let i = 0; i <= steps.length; i++) {
-            if (steps[i] == "") {
-                steps.splice(i, 1);
-                i--;
+            const stepsText = this.#stepText.value.split("\n");
+            for (let i = 0; i <= stepsText.length; i++) {
+                if (stepsText[i] == "") {
+                    stepsText.splice(i, 1);
+                    i--;
+                }
             }
+
+            let steps = [];
+            for (let i = 0; i < stepsText.length; i++) {
+                steps.push({
+                    "stepNr": i + 1,
+                    "step": stepsText[i]
+                });
+            }
+
+
+            let newRecipe = new Recipe();
+            newRecipe.name = this.#name.value;
+            newRecipe.url = this.#url.value;
+            newRecipe.cookTime = this.#cookTime.value;
+            newRecipe.prepTime = this.#prepTime.value;
+            newRecipe.steps = steps;
+            newRecipe.ingredients = this.ingredients;
+
+
+            try {
+                let recipeCreate = recipes.create_recipe(newRecipe);
+                alert("Recipe created!");
+                
+                this.countSteps = 1;
+                this.#ingredientList.innerHTML = "";
+                    
+                this.#name.value = "";
+                this.#url.value = "";
+                this.#cookTime.value = "";
+                this.#prepTime.value = "";
+                this.#ingredientInput.value = "";
+
+                this.#ingredientInput.value = "";
+                this.ingredients = [];
+                
+                return recipeCreate;
+            } catch(e) {
+                alert(e);
+                return;
+            }
+
+
+
         }
-
-        steps = []
-
-        this.#ingredientList.innerHTML = "";
-            
-        this.#name.value = "";
-        this.#url.value = "";
-        this.#cookTime.value = "";
-        this.#prepTime.value = "";
-        this.#ingredientInput.value = "";
     }
 
     async addIngredient() {
-        const text = this.#ingredientInput.value.trim();
+        const text = this.#ingredientUnitInput.value != "" ? 
+                     this.#ingredientAmountInput.value.trim() + this.#ingredientUnitInput.value.trim() + " " + this.#ingredientInput.value.trim() :
+                     this.#ingredientAmountInput.value.trim() + " " + this.#ingredientInput.value.trim();
         if (!text) return;
+
+        this.ingredients.push({name: this.#ingredientInput.value.trim(),
+            amount: this.#ingredientAmountInput.value.trim(),
+            unit: this.#ingredientUnitInput.value.trim()});
 
         const span = document.createElement("span");
         span.textContent = text;
+        span.id = this.#ingredientInput.value.trim();
         span.classList.add("tag", "is-info", "hoverClass");
 
         span.addEventListener("click", () => {
+            for (let i = 0; i < this.ingredients.length; i++) {
+                if (this.ingredients[i]["name"] == span.id) {
+                    this.ingredients.splice(i, 1);
+                }
+            }
+
             span.remove();
         });
 
         this.#ingredientList.appendChild(span);
         this.#ingredientInput.value = "";
+        this.#ingredientAmountInput.value = "";
+        this.#ingredientUnitInput.value = "";
         this.#ingredientInput.focus();
     }
 
