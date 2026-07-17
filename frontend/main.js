@@ -1,0 +1,1 @@
+import RecipeFinder from './components/recipefinder.js';
