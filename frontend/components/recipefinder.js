@@ -161,7 +161,13 @@ export default class RecipeFinder extends HTMLElement {
 
             let cookTimeSpan = document.createElement("span");
             cookTimeSpan.slot = "cookTime";
-            cookTimeSpan.innerText = recipe.cookTime;
+            
+            const duration = Temporal.Duration.from(recipe.cookTime);
+            const formattedCookTime = String(duration.hours).padStart(2, "0") + ":" +
+                                      String(duration.minutes).padStart(2, "0") + ":" +
+                                      String(duration.seconds).padStart(2, "0");
+            
+            cookTimeSpan.innerText = formattedCookTime;
 
             recipeView.appendChild(nameSpan);
             recipeView.appendChild(urlSpan);
