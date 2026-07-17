@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, File, UploadFile
 from fastapi import Query as fQuery
 from typing import List, Annotated
 from sqlalchemy.orm import Session, Query
+from pathlib import Path
+from uuid import uuid4
 
 from ..database import get_db
 from ..models import recipes as recipeModels
@@ -54,7 +56,8 @@ async def get_recipe(id: int, controller: RecipeController = Depends(RecipeContr
             prepTime = recipe.prepTime,
             steps = recipe.steps,
             url = recipe.url,
-            ingredients = recipe.ingredients
+            ingredients = recipe.ingredients,
+            image = recipe.image
         )
     except ObjectNotFoundException:
         raise HTTPException(
@@ -102,6 +105,18 @@ async def get_recipe_steps(id: int,
             detail=str(e)
         )
 
+@router.post("/{id}/image")
+async def upload_image(
+    id: int,
+    file: UploadFile = File(...),
+    controller: RecipeController = Depends(RecipeController)):
+    
+    try:
+        recipe = controller.upload_image(id, file)
+        return recipe
+    except ObjectNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=int)
 async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Depends(RecipeController)):
 
@@ -114,3 +129,5 @@ async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Dep
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
+

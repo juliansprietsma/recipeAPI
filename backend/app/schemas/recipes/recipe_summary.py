@@ -5,3 +5,4 @@ class RecipeSummary(RecipeBase):
     name: str
     url: str
     cookTime: datetime.timedelta
+    image: str

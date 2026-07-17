@@ -118,6 +118,7 @@ export default class RecipeCreator extends HTMLElement {
             newRecipe.prepTime = this.#prepTime.value;
             newRecipe.steps = steps;
             newRecipe.ingredients = this.ingredients;
+            newRecipe.image = "";
 
 
             try {
