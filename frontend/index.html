@@ -1,11 +1,230 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frontend</title>
-</head>
-<body>
-    <h1 style="color: #C8102E">Test</h1>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RecipeAPI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/css/all.min.css">
+  </head>
+  <body>
+
+    <section class="hero is-link">
+
+            <div class="hero-body has-text-centered">
+                <a href=""><p class="title">RecipeAPI</p></a>
+                <p class="subtitle">Made by <strong><a href="https://github.com/juliansprietsma" style="color: inherit;">juliansprietsma</a></strong></p>
+            </div>
+    </section>
+
+    <recipe-finder id="finder"></recipe-finder>
+
+
+    <recipe-create id="creator" style="display:none;"></recipe-create>
+
+    <!-- Templates -->
+
+    <template id="recipe-finder">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <link rel="stylesheet" href="/static/css/all.min.css">
+
+
+        <section class="section">
+            <div class="container has-text-centered">
+                <p class="subtitle">Find a recipe:</p>
+                <p>
+                    Press the options button (marked by <i class="fa-solid fa-bars-staggered"></i>) to see more filtering options. 
+                    To add an ingredient, type the ingredient and press the plus button or press enter.<br>
+                    To remove an ingredient from the list, click on it.
+                </p>
+                <br>
+                <div class="level mb-4">
+                    <input class="input" type="text" placeholder="Name of recipe" id="name">
+                    <div class="level-right">
+                        <button class="button level-item is-info" id="options-button"><i class="fa-solid fa-bars-staggered"></i></button>
+                    </div>
+                </div>
+                <div class="fixed-grid" id="options" style="display:none;">
+                    <div class="grid">
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Cooking time:</p>
+                                <input class="input" type="time" step="1" id="cookTime">
+                            </div>
+                        </div>
+
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Ingredients:</p>
+                                <div class="level">
+                                    <input class="level-item input" type="text" placeholder="ingredient" id="ingredientInput">
+                                    <button class="button level-right is-info" id="ingredientAdd">Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cell"></div>
+
+                        <div class="cell tags" id="ingredientList" style=":hover { text-decoration: line-through; }">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level">
+                    <div class="section level-item has-text-centered">
+                        <button class="button level-item is-warning mr-2 ml-2" id="create-button"><i class="fa-solid fa-plus"></i> Create</button>
+                        <button class="button level-item is-info mr-2 ml-2" id="search"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="fixed-grid has-3-cols mt-2">
+                    <div class="grid" id="recipes">
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <style>
+
+            .hoverClass:hover {
+                text-decoration: line-through;
+                cursor: pointer;
+            }
+
+        </style>
+
+    </template>
+
+
+    <template id="recipe-create">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <link rel="stylesheet" href="/static/css/all.min.css">
+
+        <section class="section">
+            <div class="container has-text-centered">
+                <p class="subtitle">Create a recipe:</p>
+                <p>
+                    Fill in the following fields and press the "<i class="fa-solid fa-plus"></i> create" button to create a new recipe.<br>
+                    Press the "<i class="fa-solid fa-magnifying-glass"></i> Search" button to search for a recipe instead.
+                </p>
+                <br>
+                <div>
+                    <div>
+                        <p class="heading">name:</p>
+                        <input class="input" type="text" placeholder="Type the name of the recipe" id="name">
+                    </div>
+                </div>
+                <div class="fixed-grid" id="options">
+                    <div class="grid">
+                        <div class="cell has-text-centered">
+                            <p class="heading">url:</p>
+                            <input class="input" type="text" placeholder="url" id="url">
+                        </div>
+                        
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Ingredients:</p>
+                                <div class="level">
+                                    <div class="level-item">
+                                        <input class="input" type="number" placeholder="amount" maxlength="5" id="ingredientAmount" style="max-width: 100px;">
+                                        <input class="input" type="text" placeholder="unit" maxlength="5" id="ingredientUnit" style="max-width: 100px;">
+                                        <input class="input" type="text" placeholder="ingredient" id="ingredientInput">
+                                    </div>
+                                    <button class="button level-right is-info" id="ingredientAdd">Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cell"></div>
+
+                        <div class="cell tags" id="ingredientList" style=":hover { text-decoration: line-through; }">
+                        </div>
+                        
+                        <div class="cell has-text-centered"> 
+                            <div>
+                                <p class="heading">Cooking time:</p>
+                                <input class="input" type="time" step="1" id="cookTime">
+                            </div>
+                        </div>
+
+                        <div class="cell has-text-centered">
+                            <div>
+                                <p class="heading">Prep time:</p>
+                                <input class="input" type="time" step="1" id="prepTime">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="has-text-centered">
+                    <div>
+                        <p>Type the steps, seperated by whitespace (do not include step numbers)</p>
+                        <textarea class="textarea" placeholder="Steps" id="stepText" rows="10"></textarea>
+                    </div>
+                </div>
+
+                <div class="level">
+                    <div class="section level-item has-text-centered">
+                        <button class="button level-item is-warning mr-2 ml-2" id="search-button"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                        <button class="button level-item is-info mr-2 ml-2" id="create-button"><i class="fa-solid fa-plus"></i> Create</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <style>
+
+            .hoverClass:hover {
+                text-decoration: line-through;
+                cursor: pointer;
+            }
+
+        </style>
+
+    </template>
+    
+
+
+    <template id="recipe-summary">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+        <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
+
+        <div class="cell has-text-centered mt-2">
+            <div class="notification is-info">
+                <p class="title">
+                    <slot name="name"></slot> (<slot name="url"></slot>)
+                </p>
+                <p class="subtitle">
+                    <slot name="cookTime"></slot>
+                </p>
+            </div>
+        </div>
+
+        <style>
+            :host {
+                cursor: pointer;
+            }
+        </style>
+    </template>
+    
+
+    <footer class="footer">
+        <div class="has-text-centered">
+            <p>
+                <strong>RecipeAPI</strong> by <a href="https://github.com/juliansprietsma">juliansprietsma</a>.
+                Find the source code <strong><a href="https://github.com/juliansprietsma/recipeAPI">here</a></strong>
+            </p>
+        </div>
+    </footer>
+
+    <style>
+        @import url("https://kit.fontawesome.com/99b2501698.js");
+    </style>
+
+    <script type="module" src="main.js"></script>
+
 </body>
 </html>
