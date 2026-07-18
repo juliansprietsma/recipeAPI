@@ -8,7 +8,8 @@ export default class RecipeCreator extends HTMLElement {
     /** @type {HTMLInputElement} */ #cookTime;
     /** @type {HTMLInputElement} */ #prepTime;
     /** @type {HTMLInputElement} */ #stepText;
-
+    /** @type {HTMLInputElement} */ #imageInput;
+ 
     /** @type {HTMLInputElement} */ #ingredientInput;
     /** @type {HTMLInputElement} */ #ingredientAmountInput;
     /** @type {HTMLInputElement} */ #ingredientUnitInput;
@@ -35,6 +36,7 @@ export default class RecipeCreator extends HTMLElement {
         this.#cookTime = this.shadowRoot.getElementById("cookTime");
         this.#prepTime = this.shadowRoot.getElementById("prepTime");
         this.#stepText = this.shadowRoot.getElementById("stepText");
+        this.#imageInput = this.shadowRoot.getElementById("imageInput");
 
         this.#ingredientInput = this.shadowRoot.getElementById("ingredientInput");
         this.#ingredientAmountInput = this.shadowRoot.getElementById("ingredientAmount");
@@ -92,8 +94,6 @@ export default class RecipeCreator extends HTMLElement {
         ) {
             alert("Fill in all necessary fields (Name, cook time, prep time, ingredients and steps)");
         } else {
-
-            
             const stepsText = this.#stepText.value.split("\n");
             for (let i = 0; i <= stepsText.length; i++) {
                 if (stepsText[i] == "") {
@@ -123,8 +123,17 @@ export default class RecipeCreator extends HTMLElement {
 
             try {
                 let recipeCreate = recipes.create_recipe(newRecipe);
+
+                if (this.#imageInput.files.length == 0) {
+                    recipes.upload_image(recipeCreate.id, File("/static/images/recipe-placeholder.jpg"))
+                } else {
+                    recipes.upload_image(recipeCreate.id, this.#imageInput.files[0]);
+                }
+
                 alert("Recipe created!");
                 
+
+
                 this.countSteps = 1;
                 this.#ingredientList.innerHTML = "";
                     

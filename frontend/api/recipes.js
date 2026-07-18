@@ -50,7 +50,19 @@ export default {
         if (!apiResponse.ok) throw new Error(await apiResponse.text)();
 
         return Recipe.fromJson(await apiResponse.json());
-    }
+    },
 
+
+    /**
+     * @param {Number} id
+     * @param {File} file
+     * @returns {Number}
+     */
+    async upload_image(id, file) {
+        const apiResponse = await apiCall("recipes/${id}/image", "POST", {"id": id, "file": file});
+        if (!apiResponse.ok) throw new Error(await apiResponse.text)();
+
+        return Recipe.fromJson(await apiResponse.json());
+    }
 
 }
