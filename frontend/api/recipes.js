@@ -34,7 +34,7 @@ export default {
      * @returns {Promise<Recipe>}
      */
     async get_recipe(id) {
-        const apiResponse = await apiCall("recipes/${id}", "GET");
+        const apiResponse = await apiCall(`recipes/${id}`, "GET");
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
         return Recipe.fromJson(await apiResponse.json());
@@ -47,9 +47,10 @@ export default {
      */
     async create_recipe(recipe) {
         const apiResponse = await apiCall('recipes', "POST", recipe);
-        if (!apiResponse.ok) throw new Error(await apiResponse.text)();
+        if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
-        return Recipe.fromJson(await apiResponse.json());
+
+        return await apiResponse.json();
     },
 
 
@@ -59,10 +60,14 @@ export default {
      * @returns {Number}
      */
     async upload_image(id, file) {
-        const apiResponse = await apiCall("recipes/${id}/image", "POST", {"id": id, "file": file});
-        if (!apiResponse.ok) throw new Error(await apiResponse.text)();
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('file', file);
 
-        return Recipe.fromJson(await apiResponse.json());
+        const apiResponse = await apiCall(`recipes/${id}/image`, "POST", formData);
+        if (!apiResponse.ok) throw new Error(await apiResponse.text());
+
+        return await apiResponse.json();
     }
 
 }

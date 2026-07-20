@@ -39,8 +39,8 @@ export default class Recipe {
         recipe.url = json.url;
         recipe.cookTime = json.cookTime;
         recipe.prepTime = json.prepTime;
-        recipe.steps = json.steps.map(StepSummary.fromJson);
-        recipe.ingredients = json.ingredients.map(IngredientSummary.fromJson);
+        recipe.steps = json.steps.map(StepSummary.fromJson());
+        recipe.ingredients = json.ingredients.map(IngredientSummary.fromJson());
         recipe.image = json.image;
 
         return recipe;

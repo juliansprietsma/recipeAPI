@@ -1,5 +1,8 @@
 export default class RecipeSummary {
 
+    /** @type {number} */
+    id;
+
     /** @type {string} */
     name;
 
