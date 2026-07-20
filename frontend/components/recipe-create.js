@@ -190,7 +190,7 @@ export default class RecipeCreator extends HTMLElement {
         this.#ingredientInput.value = "";
         this.#ingredientAmountInput.value = "";
         this.#ingredientUnitInput.value = "";
-        this.#ingredientInput.focus();
+        this.#ingredientAmountInput.focus();
     }
 
     async showSearch() {
