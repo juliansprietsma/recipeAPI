@@ -155,9 +155,16 @@ export default class RecipeFinder extends HTMLElement {
             nameSpan.slot = "name";
             nameSpan.innerText = recipe.name;
 
-            let urlSpan = document.createElement("span");
+            let urlSpan = document.createElement("a");
             urlSpan.slot = "url";
-            urlSpan.innerText = recipe.url;
+            urlSpan.setAttribute("href", recipe.url);
+            urlSpan.setAttribute("target", "_blank")
+            urlSpan.innerText = "link";
+
+            let imageSpan = document.createElement("img");
+            imageSpan.slot = "image";
+            imageSpan.setAttribute("src", "http://localhost:8000/uploads/" + recipe.image);
+
 
             let cookTimeSpan = document.createElement("span");
             cookTimeSpan.slot = "cookTime";
@@ -172,6 +179,7 @@ export default class RecipeFinder extends HTMLElement {
             recipeView.appendChild(nameSpan);
             recipeView.appendChild(urlSpan);
             recipeView.appendChild(cookTimeSpan);
+            recipeView.appendChild(imageSpan);
 
             recipeView.addEventListener("click", () => {
                 this.dispatchEvent(new RecipeSelectedEvent(recipeView.recipeId));

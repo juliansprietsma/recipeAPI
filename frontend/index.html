@@ -197,14 +197,24 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
         <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
 
-        <div class="cell has-text-centered mt-2">
+        <div class="cell mt-2">
             <div class="notification is-info">
-                <p class="title">
-                    <slot name="name"></slot> (<slot name="url"></slot>)
-                </p>
-                <p class="subtitle">
-                    <slot name="cookTime"></slot>
-                </p>
+                <div class="fixed-grid has-2-cols">
+                    <div class="grid">
+                        <figure class="cell image is-128x128">
+                            <slot name="image"></slot>
+                        </figure>
+
+                        <div class="cell">
+                            <p class="title is-5">
+                                <slot name="name"></slot> (<slot name="url"></slot>)
+                            </p>
+                            <p class="subtitle is-6">
+                                <slot name="cookTime"></slot>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -212,6 +222,19 @@
             :host {
                 cursor: pointer;
             }
+
+            ::slotted(a:link) {
+                color: hsl(217, 82%, 63%) !important;
+            }
+
+            ::slotted(a:visited) {
+                color: hsl(217, 82%, 63%) !important;
+            }
+
+            ::slotted(a:hover) {
+                color: hsl(217, 67%, 55%) !important;
+            }
+
         </style>
     </template>
     

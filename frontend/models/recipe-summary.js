@@ -12,6 +12,9 @@ export default class RecipeSummary {
     /** @type {string} */
     cookTime;
 
+    /** @type {string} */
+    image;
+
     /**
      * @param {object}
      * @returns {RecipeSummary}
