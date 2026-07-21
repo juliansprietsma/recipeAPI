@@ -13,7 +13,7 @@ from ..schemas.ingredients import IngredientSummary
 from ..crud.recipe import RecipeController
 from ..crud.step import StepController
 from ..crud.ingredient import IngredientController
-from ..crud import ObjectNotFoundException, MultipleInstancesFoundException
+from ..crud import ObjectNotFoundException, MultipleInstancesFoundException, AlreadyExistsException
 
 router = APIRouter(
     prefix="/recipes",
@@ -105,7 +105,7 @@ async def get_recipe_steps(id: int,
             detail=str(e)
         )
 
-@router.post("/{id}/image")
+@router.put("/{id}/image")
 async def upload_image(
     id: int,
     file: UploadFile = File(...),
@@ -116,6 +116,17 @@ async def upload_image(
         return recipe
     except ObjectNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    
+@router.post("/upload_default_image")
+async def upload_default_image(
+    file: UploadFile = File(...),
+    controller: RecipeController = Depends(RecipeController)):
+
+    try:
+        recipe = controller.upload_default_image(file)
+        return recipe
+    except AlreadyExistsException as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=int)
 async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Depends(RecipeController)):
@@ -129,5 +140,13 @@ async def create_recipe(recipe: RecipeCreate, controller: RecipeController = Dep
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    
+@router.put("/set_image")
+async def set_image(id: int, image: str, controller: RecipeController = Depends(RecipeController)):
+    try:
+        recipe = controller.set_image_manually(id, image)
+        return recipe
+    except ObjectNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     
 

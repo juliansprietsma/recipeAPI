@@ -125,11 +125,15 @@ export default class RecipeCreator extends HTMLElement {
                 let recipeCreate = await recipes.create_recipe(newRecipe);
 
                 if (!this.#imageInput.files || this.#imageInput.files.length == 0) {
-                    let response = await fetch("https://i.postimg.cc/DzXb2pCX/food-placeholder.png");
-                    const blob = await response.blob();
+                    
+                    let defaultImage = await fetch("https://i.postimg.cc/DzXb2pCX/food-placeholder.png");
+                    const blob = await defaultImage.blob();
                     const defaultFile = new File([blob], "default.png", {type: blob.type || "image/png"});
 
-                    recipes.upload_image(recipeCreate, defaultFile);
+                    let response = await recipes.check_default_image(defaultFile);
+
+                    await recipes.set_image(recipeCreate, "default.png");
+
                 } else {
                     recipes.upload_image(recipeCreate, this.#imageInput.files[0]);
                 }

@@ -68,6 +68,29 @@ export default {
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
         return await apiResponse.json();
+    },
+
+    /**
+     * @returns {Boolean}
+     */
+    async check_default_image(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const apiResponse = await apiCall('recipes/upload_default_image', "POST", formData);
+        if (!apiResponse.ok) return true;
+
+        return false;
+    },
+
+    /**
+     * @param {Number} id
+     * @param {string} filename
+     */
+    async set_image(id, filename) {
+        const apiResponse = await apiCall('recipes/set_image', "PUT", {id:id, image:filename});
+        if (!apiResponse.ok) throw new Error(await apiResponse.text());
+
     }
 
 }

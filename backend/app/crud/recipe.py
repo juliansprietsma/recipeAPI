@@ -101,6 +101,20 @@ class RecipeController(Controller):
         self.db.refresh(db_recipe)
         return db_recipe
 
+    def set_image_manually(self, id: int, image: str):
+        try:
+            recipe = self.get_recipe(id)
+        except Exception as e:
+            raise ObjectNotFoundException(e.message)
+        
+        recipe.image = image
+
+        self.db.add(recipe)
+        self.db.commit()
+        self.db.refresh(recipe)
+
+        return recipe
+
     def upload_image(self, id: int, image: File):
         try:
             recipe = self.get_recipe(id)
@@ -122,3 +136,15 @@ class RecipeController(Controller):
         self.db.refresh(recipe)
 
         return recipe
+    
+    def upload_default_image(self, image: File):
+        extension = Path(image.filename).suffix
+        filename = f"default{extension}"
+
+        fileDestination = self.upload_dir / filename
+
+        if Path(f"/data/images/{filename}").is_file():
+            raise AlreadyExistsException(f"Default file already exists under the name: {filename}")
+
+        with fileDestination.open("wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)

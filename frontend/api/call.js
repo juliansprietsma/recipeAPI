@@ -21,7 +21,7 @@ export default async function apiCall(url, method = "GET", data = null) {
     };
 
     if (data != null) {
-        if (method == "GET" || method == "HEAD" || method == "DELETE") {
+        if (method == "GET" || method == "HEAD" || method == "DELETE" || method =="PUT") {
             url += "?" + new URLSearchParams(data).toString();
         } else {
             if (data instanceof FormData) {
