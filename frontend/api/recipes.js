@@ -57,17 +57,17 @@ export default {
     /**
      * @param {Number} id
      * @param {File} file
-     * @returns {Number}
+     * @returns {Promise<Recipe>}
      */
     async upload_image(id, file) {
         const formData = new FormData();
         formData.append('id', id);
         formData.append('file', file);
 
-        const apiResponse = await apiCall(`recipes/${id}/image`, "POST", formData);
+        const apiResponse = await apiCall(`recipes/${id}/image`, "PUT", formData);
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
-        return await apiResponse.json();
+        return await Recipe.fromJson(apiResponse.json());
     },
 
     /**

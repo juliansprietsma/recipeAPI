@@ -21,14 +21,18 @@ export default async function apiCall(url, method = "GET", data = null) {
     };
 
     if (data != null) {
-        if (method == "GET" || method == "HEAD" || method == "DELETE" || method =="PUT") {
+        if (method == "GET" || method == "HEAD" || method == "DELETE") {
             url += "?" + new URLSearchParams(data).toString();
         } else {
             if (data instanceof FormData) {
                 requestConfig.body = data;
             } else {
-                requestConfig.body = JSON.stringify(data);
-                requestConfig.headers['Content-Type'] = 'application/json';
+                if (method == "PUT") {
+                    url += "?" + new URLSearchParams(data).toString();
+                } else {
+                    requestConfig.body = JSON.stringify(data);
+                    requestConfig.headers['Content-Type'] = 'application/json';
+                }
             }
         }
     }
