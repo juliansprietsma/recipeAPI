@@ -51,7 +51,6 @@ export default class RecipeCreator extends HTMLElement {
         this.#recipeCreator = document.getElementById("creator");
         this.#recipeFinder = document.getElementById("finder");
 
-        this.countSteps = 1;
         this.ingredients = [];
 
 
@@ -138,31 +137,32 @@ export default class RecipeCreator extends HTMLElement {
                     await recipes.upload_image(recipeCreate, this.#imageInput.files[0]);
                 }
 
-                alert("Recipe created with ID: " + recipeCreate);
+                // Find a way to "select" the new recipe and show that it is created
                 
+                await this.clear();
 
-
-                this.countSteps = 1;
-                this.#ingredientList.innerHTML = "";
-                    
-                this.#name.value = "";
-                this.#url.value = "";
-                this.#cookTime.value = "";
-                this.#prepTime.value = "";
-                this.#ingredientInput.value = "";
-
-                this.#ingredientInput.value = "";
-                this.ingredients = [];
-                
                 return recipeCreate;
             } catch(e) {
                 alert(e);
                 return;
             }
-
-
-
         }
+    }
+
+    async clear() {
+        this.#name.value = "";
+        this.#imageInput.value = "";
+        this.#url.value = "";
+        this.#ingredientAmountInput.value = "";
+        this.#ingredientUnitInput.value = "";
+        this.#ingredientInput.value = "";
+        this.#ingredientList.innerHTML = "";
+        this.#cookTime.value = "";
+        this.#prepTime.value = "";
+        this.ingredients = [];
+        this.#stepText.value = "";
+
+        await this.showSearch();
     }
 
     async addIngredient() {
