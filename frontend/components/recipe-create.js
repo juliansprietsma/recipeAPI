@@ -135,7 +135,7 @@ export default class RecipeCreator extends HTMLElement {
                     await recipes.set_image(recipeCreate, "default.png");
 
                 } else {
-                    recipes.upload_image(recipeCreate, this.#imageInput.files[0]);
+                    await recipes.upload_image(recipeCreate, this.#imageInput.files[0]);
                 }
 
                 alert("Recipe created with ID: " + recipeCreate);

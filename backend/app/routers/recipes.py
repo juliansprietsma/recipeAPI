@@ -113,7 +113,16 @@ async def upload_image(
     
     try:
         recipe = controller.upload_image(id, file)
-        return recipe
+        return Recipe(
+            id = recipe.id,
+            name = recipe.name,
+            cookTime = recipe.cookTime,
+            prepTime = recipe.prepTime,
+            steps = recipe.steps,
+            url = recipe.url,
+            ingredients = recipe.ingredients,
+            image = recipe.image
+        )
     except ObjectNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     

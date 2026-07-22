@@ -49,7 +49,6 @@ export default {
         const apiResponse = await apiCall('recipes', "POST", recipe);
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
-
         return await apiResponse.json();
     },
 
@@ -67,7 +66,7 @@ export default {
         const apiResponse = await apiCall(`recipes/${id}/image`, "PUT", formData);
         if (!apiResponse.ok) throw new Error(await apiResponse.text());
 
-        return await Recipe.fromJson(apiResponse.json());
+        return Recipe.fromJson(await apiResponse.json());
     },
 
     /**
