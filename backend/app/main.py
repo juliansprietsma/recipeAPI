@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from .routers import ingredients
 from .routers import recipes
 
@@ -32,6 +33,10 @@ app.add_middleware (
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/uploads",
+          StaticFiles(directory="/data/images"),
+          name="uploads")
 
 app.include_router(recipes.router)
 app.include_router(ingredients.router)

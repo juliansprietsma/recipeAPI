@@ -17,16 +17,23 @@ export default async function apiCall(url, method = "GET", data = null) {
     /** @type {RequestInit} */
     const requestConfig = {
         method: method,
-        headers: {
-            "Content-Type": "application/json"
-        }
+        headers: {}
     };
 
     if (data != null) {
         if (method == "GET" || method == "HEAD" || method == "DELETE") {
             url += "?" + new URLSearchParams(data).toString();
         } else {
-            requestConfig.body = JSON.stringify(data);
+            if (data instanceof FormData) {
+                requestConfig.body = data;
+            } else {
+                if (method == "PUT") {
+                    url += "?" + new URLSearchParams(data).toString();
+                } else {
+                    requestConfig.body = JSON.stringify(data);
+                    requestConfig.headers['Content-Type'] = 'application/json';
+                }
+            }
         }
     }
 

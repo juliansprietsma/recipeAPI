@@ -1,5 +1,8 @@
 export default class RecipeSummary {
 
+    /** @type {number} */
+    id;
+
     /** @type {string} */
     name;
 
@@ -8,6 +11,9 @@ export default class RecipeSummary {
 
     /** @type {string} */
     cookTime;
+
+    /** @type {string} */
+    image;
 
     /**
      * @param {object}

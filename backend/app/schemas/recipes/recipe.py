@@ -12,3 +12,4 @@ class Recipe(RecipeBase):
     prepTime: datetime.timedelta
     steps: list[StepSummary]
     ingredients: list[IngredientSummary]
+    image: str
