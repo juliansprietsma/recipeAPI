@@ -1,8 +1,11 @@
-from fastapi import Depends, Query
+from fastapi import Depends, Query, File
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import List, Annotated
 import datetime
+from pathlib import Path
+from uuid import uuid4
+import shutil
 
 from ..database import get_db
 from ..models.recipes import Recipe
@@ -20,6 +23,9 @@ class RecipeController(Controller):
 
         self.ingredients_controller = IngredientController(db)
         self.step_controller = StepController(db)
+        self.upload_dir = Path("/data/images")
+        self.upload_dir.mkdir(exist_ok=True, parents=True)
+
 
     def get_recipes(self, 
                     name: str, 
@@ -86,7 +92,8 @@ class RecipeController(Controller):
             prepTime=recipe.prepTime,
             steps=db_steps,
             url=recipe.url,
-            ingredients=db_ingredients
+            ingredients=db_ingredients,
+            image = ""
         )
 
         self.db.add(db_recipe)
@@ -94,4 +101,50 @@ class RecipeController(Controller):
         self.db.refresh(db_recipe)
         return db_recipe
 
+    def set_image_manually(self, id: int, image: str):
+        try:
+            recipe = self.get_recipe(id)
+        except Exception as e:
+            raise ObjectNotFoundException(e.message)
+        
+        recipe.image = image
+
+        self.db.add(recipe)
+        self.db.commit()
+        self.db.refresh(recipe)
+
+        return recipe
+
+    def upload_image(self, id: int, image: File):
+        try:
+            recipe = self.get_recipe(id)
+        except Exception as e:
+            raise ObjectNotFoundException(e.message)
+
+        extension = Path(image.filename).suffix
+        filename = f"{uuid4()}{extension}"
+
+        fileDestination = self.upload_dir / filename
+
+        with fileDestination.open("wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        recipe.image = filename
+
+        self.db.add(recipe)
+        self.db.commit()
+        self.db.refresh(recipe)
+
+        return recipe
     
+    def upload_default_image(self, image: File):
+        extension = Path(image.filename).suffix
+        filename = f"default{extension}"
+
+        fileDestination = self.upload_dir / filename
+
+        if Path(f"/data/images/{filename}").is_file():
+            raise AlreadyExistsException(f"Default file already exists under the name: {filename}")
+
+        with fileDestination.open("wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)

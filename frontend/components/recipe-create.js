@@ -8,7 +8,8 @@ export default class RecipeCreator extends HTMLElement {
     /** @type {HTMLInputElement} */ #cookTime;
     /** @type {HTMLInputElement} */ #prepTime;
     /** @type {HTMLInputElement} */ #stepText;
-
+    /** @type {HTMLInputElement} */ #imageInput;
+ 
     /** @type {HTMLInputElement} */ #ingredientInput;
     /** @type {HTMLInputElement} */ #ingredientAmountInput;
     /** @type {HTMLInputElement} */ #ingredientUnitInput;
@@ -35,6 +36,7 @@ export default class RecipeCreator extends HTMLElement {
         this.#cookTime = this.shadowRoot.getElementById("cookTime");
         this.#prepTime = this.shadowRoot.getElementById("prepTime");
         this.#stepText = this.shadowRoot.getElementById("stepText");
+        this.#imageInput = this.shadowRoot.getElementById("imageInput");
 
         this.#ingredientInput = this.shadowRoot.getElementById("ingredientInput");
         this.#ingredientAmountInput = this.shadowRoot.getElementById("ingredientAmount");
@@ -49,7 +51,6 @@ export default class RecipeCreator extends HTMLElement {
         this.#recipeCreator = document.getElementById("creator");
         this.#recipeFinder = document.getElementById("finder");
 
-        this.countSteps = 1;
         this.ingredients = [];
 
 
@@ -92,8 +93,6 @@ export default class RecipeCreator extends HTMLElement {
         ) {
             alert("Fill in all necessary fields (Name, cook time, prep time, ingredients and steps)");
         } else {
-
-            
             const stepsText = this.#stepText.value.split("\n");
             for (let i = 0; i <= stepsText.length; i++) {
                 if (stepsText[i] == "") {
@@ -118,33 +117,52 @@ export default class RecipeCreator extends HTMLElement {
             newRecipe.prepTime = this.#prepTime.value;
             newRecipe.steps = steps;
             newRecipe.ingredients = this.ingredients;
+            newRecipe.image = "";
 
 
             try {
-                let recipeCreate = recipes.create_recipe(newRecipe);
-                alert("Recipe created!");
-                
-                this.countSteps = 1;
-                this.#ingredientList.innerHTML = "";
-                    
-                this.#name.value = "";
-                this.#url.value = "";
-                this.#cookTime.value = "";
-                this.#prepTime.value = "";
-                this.#ingredientInput.value = "";
+                let recipeCreate = await recipes.create_recipe(newRecipe);
 
-                this.#ingredientInput.value = "";
-                this.ingredients = [];
+                if (!this.#imageInput.files || this.#imageInput.files.length == 0) {
+                    
+                    let defaultImage = await fetch("https://i.postimg.cc/DzXb2pCX/food-placeholder.png");
+                    const blob = await defaultImage.blob();
+                    const defaultFile = new File([blob], "default.png", {type: blob.type || "image/png"});
+
+                    let response = await recipes.check_default_image(defaultFile);
+
+                    await recipes.set_image(recipeCreate, "default.png");
+
+                } else {
+                    await recipes.upload_image(recipeCreate, this.#imageInput.files[0]);
+                }
+
+                // Find a way to "select" the new recipe and show that it is created
                 
+                await this.clear();
+
                 return recipeCreate;
             } catch(e) {
                 alert(e);
                 return;
             }
-
-
-
         }
+    }
+
+    async clear() {
+        this.#name.value = "";
+        this.#imageInput.value = "";
+        this.#url.value = "";
+        this.#ingredientAmountInput.value = "";
+        this.#ingredientUnitInput.value = "";
+        this.#ingredientInput.value = "";
+        this.#ingredientList.innerHTML = "";
+        this.#cookTime.value = "";
+        this.#prepTime.value = "";
+        this.ingredients = [];
+        this.#stepText.value = "";
+
+        await this.showSearch();
     }
 
     async addIngredient() {
@@ -176,7 +194,7 @@ export default class RecipeCreator extends HTMLElement {
         this.#ingredientInput.value = "";
         this.#ingredientAmountInput.value = "";
         this.#ingredientUnitInput.value = "";
-        this.#ingredientInput.focus();
+        this.#ingredientAmountInput.focus();
     }
 
     async showSearch() {

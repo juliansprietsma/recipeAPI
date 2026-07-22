@@ -24,6 +24,9 @@ export default class Recipe {
     /** @type {IngredientSummary[]?} */
     ingredients = [];    
 
+    /** @type {string?} */
+    image;
+
     
     /**
      * @param {Object}
@@ -38,6 +41,7 @@ export default class Recipe {
         recipe.prepTime = json.prepTime;
         recipe.steps = json.steps.map(StepSummary.fromJson);
         recipe.ingredients = json.ingredients.map(IngredientSummary.fromJson);
+        recipe.image = json.image;
 
         return recipe;
     }

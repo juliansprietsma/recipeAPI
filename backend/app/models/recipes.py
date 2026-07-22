@@ -13,6 +13,7 @@ class Recipe(Base):
     prepTime = Column("Preparation_time", Interval, nullable=True)
     steps = relationship("Steps", back_populates="recipes")
     url = Column("URL", String, nullable=True)
+    image = Column("Image", String, nullable=True)
 
     ingredients = relationship(
         "Ingredient", secondary=ingredients_recipes_table, back_populates="recipes"
