@@ -2,6 +2,21 @@ import recipes from "../api/recipes.js";
 import Recipe from "../models/recipe.js";
 import RecipeFinder from "./recipefinder.js"
 
+export class RecipeSelectedEvent extends Event {
+    /** @type {number} */
+    recipeId;
+
+    /**
+     * @param {number} recipeId
+     */
+    constructor(recipeId) {
+        super("recipe-selected");
+
+        this.recipeId = recipeId;
+    }
+}
+
+
 export default class RecipeCreator extends HTMLElement {
     /** @type {HTMLInputElement} */ #name;
     /** @type {HTMLInputElement} */ #url;
@@ -136,9 +151,9 @@ export default class RecipeCreator extends HTMLElement {
                 } else {
                     await recipes.upload_image(recipeCreate, this.#imageInput.files[0]);
                 }
-
-                // Find a way to "select" the new recipe and show that it is created
                 
+                this.dispatchEvent(new RecipeSelectedEvent(recipeCreate));
+
                 await this.clear();
 
                 return recipeCreate;
