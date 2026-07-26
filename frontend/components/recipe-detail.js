@@ -5,13 +5,13 @@ export default class RecipeDetail extends HTMLElement {
     /** @type {HTMLTemplateElement} */ #template;
 
     /** @type {HTMLElement} */ #id;
-    /** @type {HTMLElement} */ #name;
-    /** @type {HTMLElement} */ #url;
-    /** @type {HTMLElement} */ #cookTime;
-    /** @type {HTMLElement} */ #prepTime;
-    /** @type {HTMLElement} */ #steps;
-    /** @type {HTMLElement} */ #ingredients;
-    /** @type {HTMLElement} */ #image;
+    // /** @type {HTMLElement} */ #name;
+    // /** @type {HTMLElement} */ #url;
+    // /** @type {HTMLElement} */ #cookTime;
+    // /** @type {HTMLElement} */ #prepTime;
+    // /** @type {HTMLElement} */ #steps;
+    // /** @type {HTMLElement} */ #ingredients;
+    // /** @type {HTMLElement} */ #image;
 
 
     get recipeId() {
@@ -53,6 +53,7 @@ export default class RecipeDetail extends HTMLElement {
             this.shadowRoot.innerHTML = "";
             return;
         }
+
 
         /** @type {Recipe} */
         let recipe;

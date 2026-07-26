@@ -21,7 +21,7 @@
 
     <recipe-create id="creator" style="display:none;"></recipe-create>
 
-    <recipe-detail id="detail"></recipe-detail>
+    <recipe-detail id="detail" recipe-id="2"></recipe-detail>
 
     <!-- Templates -->
 
@@ -240,8 +240,18 @@
     </template>
 
     <template id="recipe-detail">
-        <h1>Detail</h1>
-        <h2 id="id"></h2>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+
+        <section class="hero is-info is-medium">
+            <div class="hero-head has-text-centered">
+                <section class="fixed-grid has-2-cols">
+                    <section class="grid">
+                        <p class="cell title" id="id"></p>
+                        <p class="cell title">- Recipe name</p>
+                    </section>
+                </section>
+            </div>
+        </section>
     </template>
     
 
@@ -259,6 +269,12 @@
     </style>
 
     <script type="module" src="main.js"></script>
+
+    <script>
+        document.getElementById("finder").addEventListener("recipe-selected", ev => {
+            document.getElementById("detail").recipeId = ev.recipeId;
+        });
+    </script>
 
 </body>
 </html>
