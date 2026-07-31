@@ -21,7 +21,7 @@
 
     <recipe-create id="creator" style="display:none;"></recipe-create>
 
-    <recipe-detail id="detail" recipe-id="2"></recipe-detail>
+    <recipe-detail id="detail" recipe-id=""></recipe-detail>
 
     <!-- Templates -->
 
@@ -80,7 +80,7 @@
 
                 <hr>
 
-                <div class="fixed-grid has-3-cols mt-2">
+                <div class="fixed-grid has-5-cols mt-2">
                     <div class="grid" id="recipes">
 
                     </div>
@@ -198,7 +198,24 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
         <script src="https://kit.fontawesome.com/99b2501698.js" crossorigin="anonymous"></script>
 
-        <div class="cell mt-2">
+        <div class="card">
+            <header class="card-header">
+                <slot class="card-header-title title is-5 is-centered" name="name"></slot>
+            </header>
+            <div class="card-image is-128x128">
+                <figure class="cell image">
+                    <slot name="image"></slot>
+                </figure>
+            </div>
+
+            <div class="card-content">
+                <p class="subtitle is-6"><slot name="url"></slot></p>
+                <p class="subtitle is-6"><slot name="cookTime"></slot></p>
+            </div>
+        </div>
+
+
+        <!-- <div class="cell mt-2">
             <div class="notification is-info">
                 <div class="fixed-grid has-2-cols">
                     <div class="grid">
@@ -217,7 +234,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <style>
             :host {
@@ -242,16 +259,11 @@
     <template id="recipe-detail">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
 
-        <section class="hero is-info is-medium">
-            <div class="hero-head has-text-centered">
-                <section class="fixed-grid has-2-cols">
-                    <section class="grid">
-                        <p class="cell title" id="id"></p>
-                        <p class="cell title">- Recipe name</p>
-                    </section>
-                </section>
+            <div class="container has-text-centered">
+                <div class="notification is-info">
+                    <p class="cell title" id="recipe-info"></p>
+                </div>
             </div>
-        </section>
     </template>
     
 

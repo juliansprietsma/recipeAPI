@@ -174,7 +174,7 @@ export default class RecipeFinder extends HTMLElement {
                                       String(duration.minutes).padStart(2, "0") + ":" +
                                       String(duration.seconds).padStart(2, "0");
             
-            cookTimeSpan.innerText = formattedCookTime;
+            cookTimeSpan.innerText = "Duration: " + formattedCookTime;
 
             recipeView.appendChild(nameSpan);
             recipeView.appendChild(urlSpan);

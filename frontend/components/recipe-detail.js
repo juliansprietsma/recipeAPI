@@ -4,7 +4,7 @@ import Recipe from "../models/recipe.js";
 export default class RecipeDetail extends HTMLElement {
     /** @type {HTMLTemplateElement} */ #template;
 
-    /** @type {HTMLElement} */ #id;
+    /** @type {HTMLElement} */ #recipeInfo;
     // /** @type {HTMLElement} */ #name;
     // /** @type {HTMLElement} */ #url;
     // /** @type {HTMLElement} */ #cookTime;
@@ -44,7 +44,7 @@ export default class RecipeDetail extends HTMLElement {
         this.shadowRoot.appendChild(this.#template.content.cloneNode(true));
 
         //Add all variables:
-        this.#id = this.shadowRoot.getElementById("id");
+        this.#recipeInfo = this.shadowRoot.getElementById("recipe-info");
 
     }
 
@@ -66,7 +66,7 @@ export default class RecipeDetail extends HTMLElement {
 
         this.initializeTemplate();
 
-        this.#id.innerText = recipe.id;
+        this.#recipeInfo.innerText = recipe.id + " - " + recipe.name;
     }
 
 };
